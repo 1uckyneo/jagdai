@@ -1,0 +1,30 @@
+{
+  "name": "jagdai-examples",
+  "version": "0.0.5",
+  "private": true,
+  "scripts": {
+    "dev": "vite --host",
+    "build": "vite build",
+    "prebuild": "rimraf dist",
+    "serve": "vite preview --host"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "tslib": "^2.4.1",
+    "jagdai": "^0.0.1"
+  },
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^13.0.4",
+    "@types/node": "^16.7.2",
+    "@types/react": "^18.0.27",
+    "@types/react-dom": "^18.0.10",
+    "@vanilla-extract/css": "^1.9.2",
+    "@vanilla-extract/vite-plugin": "^3.7.0",
+    "@vitejs/plugin-react": "^3.0.1",
+    "fast-glob": "^3.2.11",
+    "rimraf": "^3.0.2",
+    "typescript": "^4.3.2",
+    "vite": "^4.0.4"
+  }
+}
