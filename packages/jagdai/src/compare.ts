@@ -3,7 +3,12 @@ export function compare<Selection>(prev: Selection, next: Selection) {
     return true
   }
 
-  if (typeof prev !== 'object' || prev === null || typeof next !== 'object' || next === null) {
+  if (
+    typeof prev !== 'object' ||
+    prev === null ||
+    typeof next !== 'object' ||
+    next === null
+  ) {
     return false
   }
 
@@ -36,7 +41,10 @@ export function compare<Selection>(prev: Selection, next: Selection) {
   }
 
   for (let i = 0; i < keys.length; i++) {
-    if (!Object.prototype.hasOwnProperty.call(next, keys[i]) || !Object.is(prev[keys[i]], next[keys[i]])) {
+    if (
+      !Object.prototype.hasOwnProperty.call(next, keys[i]) ||
+      !Object.is(prev[keys[i]], next[keys[i]])
+    ) {
       return false
     }
   }

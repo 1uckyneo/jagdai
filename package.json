@@ -1,7 +1,7 @@
 {
   "name": "jagdai",
   "license": "MIT",
-  "description": "An easy way to manage states in React",
+  "description": "A beginner-friendly state management solution for React",
   "author": "https://github.com/1uckyneo",
   "private": true,
   "engines": {

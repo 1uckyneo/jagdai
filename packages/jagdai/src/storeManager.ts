@@ -3,13 +3,15 @@ import type { StoreShape } from './types'
 type Listener = () => void
 
 export class StoreManager<Store extends StoreShape> {
-  querySnapshot: Store['query']
+  private state: Store['query']
   listeners = new Set<Listener>()
-  commands: Store['command'] = undefined
-  memoizedCommands: Store['command'] = undefined
+  private commands: Store['command'] = undefined
+  private memoizedCommands: Store['command'] = undefined
+  private events: Store['event'] = undefined
 
   constructor(store: Store) {
-    this.querySnapshot = store.query
+    this.state = store.query
+    this.events = store.event
 
     if (store.command) {
       this.memoizedCommands = {} as NonNullable<Store['command']>
@@ -24,7 +26,8 @@ export class StoreManager<Store extends StoreShape> {
   }
 
   update(store: Store) {
-    this.querySnapshot = store.query
+    this.state = store.query
+    this.events = store.event
 
     if (store.command) {
       for (const key in this.commands) {
@@ -39,11 +42,15 @@ export class StoreManager<Store extends StoreShape> {
     }
   }
 
-  getQuerySnapshot() {
-    return this.querySnapshot
+  getState() {
+    return this.state
   }
 
   getCommands() {
     return this.memoizedCommands
+  }
+
+  getEvents() {
+    return this.events
   }
 }

@@ -1,7 +1,7 @@
 {
   "name": "jagdai",
-  "version": "0.0.1",
-  "description": "An easy way to manage states in React",
+  "version": "0.1.1",
+  "description": "A beginner-friendly state management solution for React",
   "repository": "github:1uckyneo/jagdai",
   "bugs": "https://github.com/1uckyneo/jagdai/issues",
   "author": "https://github.com/1uckyneo",

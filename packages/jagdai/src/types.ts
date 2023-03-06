@@ -1,9 +1,18 @@
-export type StoreShape = {
+export type Subscriber<Arg> = (arg: Arg) => void
+
+export type Unsubscriber = () => void
+
+export type Event<Arg> = (subscriber: Subscriber<Arg>) => Unsubscriber
+
+export type StoreShape<Arg = unknown> = {
   query: {
     [key: string]: any
   }
   command?: {
     [key: string]: (...args: any[]) => any
+  }
+  event?: {
+    [key: string]: Event<Arg>
   }
 }
 

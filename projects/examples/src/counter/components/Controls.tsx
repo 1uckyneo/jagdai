@@ -1,4 +1,4 @@
-import { useCountCommand } from '../store/index'
+import { useCountCommand, useCountEvent } from '../store/index'
 
 export const Controls = () => {
   /**
@@ -6,6 +6,10 @@ export const Controls = () => {
    * but functions returns from it will remain latest
    */
   const { increase, decrease, reset } = useCountCommand()
+
+  useCountEvent((event) => event.increaseEvent((arg) => {
+    console.log(arg)
+  }))
 
   return (
     <div

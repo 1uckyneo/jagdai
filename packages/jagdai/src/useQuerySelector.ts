@@ -3,7 +3,8 @@ import type { Query, StoreShape } from './types'
 import useSyncExternalStoreWithSelectorExport from 'use-sync-external-store/shim/with-selector'
 import { compare } from './compare'
 
-const { useSyncExternalStoreWithSelector } = useSyncExternalStoreWithSelectorExport
+const { useSyncExternalStoreWithSelector } =
+  useSyncExternalStoreWithSelectorExport
 
 export const useQuerySelector = <Store extends StoreShape, Selection>(
   manager: StoreManager<Store>,
@@ -18,7 +19,7 @@ export const useQuerySelector = <Store extends StoreShape, Selection>(
         manager.listeners.delete(onStoreChange)
       }
     },
-    () => manager.getQuerySnapshot(),
+    () => manager.getState(),
     null, // TODO: getServerSnapshot
     queryFn,
     isEqual ?? compare,
