@@ -1,5 +1,5 @@
 import { StoreManager } from './storeManager'
-import type { Query, StoreShape } from './types'
+import type { Selector, StoreShape } from './types'
 import useSyncExternalStoreWithSelectorExport from 'use-sync-external-store/shim/with-selector'
 import { compare } from './compare'
 
@@ -8,7 +8,7 @@ const { useSyncExternalStoreWithSelector } =
 
 export const useQuerySelector = <Store extends StoreShape, Selection>(
   manager: StoreManager<Store>,
-  queryFn: Query<Store['query'], Selection>,
+  selector: Selector<Store['query'], Selection>,
   isEqual?: (prev: Selection, next: Selection) => boolean,
 ) => {
   const selection = useSyncExternalStoreWithSelector(
@@ -21,7 +21,7 @@ export const useQuerySelector = <Store extends StoreShape, Selection>(
     },
     () => manager.getState(),
     null, // TODO: getServerSnapshot
-    queryFn,
+    selector,
     isEqual ?? compare,
   )
 

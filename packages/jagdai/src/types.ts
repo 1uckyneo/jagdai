@@ -16,11 +16,11 @@ export type StoreShape<Arg = unknown> = {
   }
 }
 
-type IllegalKeys<T> = Exclude<keyof T, keyof StoreShape>
+export type ValidStore<T> = {
+  [key in keyof T]: key extends keyof StoreShape ? T[key] : never
+}
 
-export type ValidStore<T> = T & Record<IllegalKeys<T>, never>
-
-export type Query<Snapshot, Selection> = (query: Snapshot) => Selection
+export type Selector<Snapshot, Selection> = (query: Snapshot) => Selection
 
 type UpperChar =
   | 'A'

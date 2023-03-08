@@ -1,2 +1,2 @@
 export * from './jagdai'
-export { useEvent as useJagdaiEvent } from './useEvent'
+export { useJagdaiEvent } from './useJagdaiEvent'

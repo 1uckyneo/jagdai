@@ -10,6 +10,7 @@ export const {
   const [count, setCount] = useState(0)
 
   const [increaseEvent, emitIncreaseEvent] = useJagdaiEvent<string>()
+  const [decreaseEvent, emitDecreaseEvent] = useJagdaiEvent<number>()
 
   const increase = () => {
     const nextCount = count + 1
@@ -18,7 +19,9 @@ export const {
   }
 
   const decrease = () => {
-    setCount(count - 1)
+    const nextCount = count - 1
+    setCount(nextCount)
+    emitDecreaseEvent(nextCount)
   }
 
   const reset = () => {
@@ -35,7 +38,8 @@ export const {
       reset,
     },
     event: {
-      increaseEvent
-    }
+      increaseEvent,
+      decreaseEvent,
+    },
   }
 })

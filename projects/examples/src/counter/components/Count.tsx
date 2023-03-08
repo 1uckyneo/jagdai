@@ -1,4 +1,4 @@
-import { useCountQuery, useCountEvent } from '../store/index'
+import { useCountQuery } from '../store/index'
 
 export const Count = () => {
   // only re-render when count change

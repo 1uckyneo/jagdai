@@ -12,14 +12,13 @@ class EventManager<Arg> {
 
   readonly event: Event<Arg> = (subscriber) => {
     this.subscribers.add(subscriber)
-
     return () => {
       this.subscribers.delete(subscriber)
     }
   }
 }
 
-export const useEvent = <Arg>() => {
+export const useJagdaiEvent = <Arg>() => {
   const manager = useCreation(() => new EventManager<Arg>())
 
   return [manager.event, manager.emit] as const

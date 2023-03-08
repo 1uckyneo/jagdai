@@ -1,15 +1,18 @@
 import { StoreManager } from './storeManager'
-import type { Query, StoreShape } from './types'
+import type { Selector, StoreShape } from './types'
 
-export function useCommandSelector<Store extends StoreShape, Selection>(
+export function useCommandSelector<
+  Store extends StoreShape,
+  Selection = Store['command'],
+>(
   manager: StoreManager<Store>,
-  query?: Query<Store['command'], Selection>,
+  selector?: Selector<Store['command'], Selection>,
 ) {
   const commands = manager.getCommands()
 
-  if (query) {
-    return query(commands)
+  if (selector) {
+    return selector(commands)
   }
 
-  return commands
+  return commands as Selection
 }

@@ -1,11 +1,16 @@
 import type {
   StoreShape,
   ValidStore,
-  Query,
+  Selector,
   Unsubscriber,
   Capitalize,
 } from './types'
-import React, { createContext, useContext, useLayoutEffect } from 'react'
+import React, {
+  createContext,
+  useContext,
+  useLayoutEffect,
+  useEffect,
+} from 'react'
 import { useCreation } from './useCreation'
 import { StoreManager } from './storeManager'
 import { useQuerySelector } from './useQuerySelector'
@@ -29,37 +34,33 @@ type Options<Props> = {
 
 const Empty: unique symbol = Symbol('Empty Context')
 
-export function create<
-  StoreType extends StoreShape,
-  PropsType extends EmptyProps,
->(
-  useCreateStore: (
-    props: React.PropsWithChildren<PropsType>,
-  ) => ValidStore<StoreType>,
-  options?: Options<PropsType>,
+export function create<Store extends StoreShape, Props extends EmptyProps>(
+  useStoreSnapshot: (
+    props: React.PropsWithChildren<Props>,
+  ) => ValidStore<Store>,
+  options?: Options<Props>,
 ) {
-  type Store = ValidStore<StoreType>
-
   const StoreContext = createContext<StoreManager<Store> | typeof Empty>(Empty)
-
   const useStoreManager = () => {
     const manager = useContext(StoreContext)
 
     if (manager === Empty) {
-      throw new Error('You may forget to add related store provider component')
+      throw new Error(
+        'You may forget to add related snapshot provider component',
+      )
     }
 
     return manager
   }
-
-  const StoreExecutor: React.FC<React.PropsWithChildren<PropsType>> = (
-    props,
-  ) => {
-    const store = useCreateStore(props)
-    const manager = useCreation(() => new StoreManager<Store>(store))
-    manager.update(store)
+  const StoreExecutor: React.FC<React.PropsWithChildren<Props>> = (props) => {
+    const snapshot = useStoreSnapshot(props)
+    const manager = useCreation(() => new StoreManager<Store>(snapshot))
 
     useLayoutEffect(() => {
+      manager.update(snapshot)
+    })
+
+    useEffect(() => {
       manager.notify()
     })
 
@@ -70,37 +71,34 @@ export function create<
     )
   }
 
-  const IsolationContext = createContext({})
-  const IsolationProvider: React.FC<React.PropsWithChildren<unknown>> = (
+  const IsolatorContext = createContext({})
+  const IsolatorProvider: React.FC<React.PropsWithChildren<unknown>> = (
     props,
   ) => {
     return (
-      <IsolationContext.Provider value={{}}>
+      <IsolatorContext.Provider value={{}}>
         {props.children}
-      </IsolationContext.Provider>
+      </IsolatorContext.Provider>
     )
   }
-  const IsolationConsumer: React.FC<React.PropsWithChildren<unknown>> = (
+  const IsolatorConsumer: React.FC<React.PropsWithChildren<unknown>> = (
     props,
   ) => {
-    useContext(IsolationContext)
+    useContext(IsolatorContext)
     return <>{props.children}</>
   }
 
-  const StoreProvider: React.FC<React.PropsWithChildren<PropsType>> = (
-    props,
-  ) => {
+  const StoreProvider: React.FC<React.PropsWithChildren<Props>> = (props) => {
     return (
-      <IsolationProvider>
+      <IsolatorProvider>
         <StoreExecutor {...props}>
-          <IsolationConsumer>{props.children}</IsolationConsumer>
+          <IsolatorConsumer>{props.children}</IsolatorConsumer>
         </StoreExecutor>
-      </IsolationProvider>
+      </IsolatorProvider>
     )
   }
 
   const displayName = options?.name || 'JagdaiStore'
-
   StoreProvider.displayName = displayName
 
   const Store = options?.memo
@@ -110,27 +108,35 @@ export function create<
       )
     : StoreProvider
 
+  function useQuery<Selection>(
+    selector: Selector<Store['query'], Selection>,
+    isEqual?: (prev: Selection, next: Selection) => boolean,
+  ) {
+    return useQuerySelector(useStoreManager(), selector, isEqual)
+  }
+
+  function useCommand<Selection = Store['command']>(
+    selector?: Selector<Store['command'], Selection>,
+  ) {
+    return useCommandSelector(useStoreManager(), selector)
+  }
+
+  function useEvent(selector: Selector<Store['event'], Unsubscriber>): void
+  function useEvent<Name extends keyof Store['event']>(
+    name: Name,
+    subscriber: Parameters<NonNullable<Store['event']>[Name]>[0],
+  ): void
+  function useEvent<Name extends keyof Store['event']>(
+    arg1: Name | Selector<Store['event'], Unsubscriber>,
+    arg2?: Parameters<NonNullable<Store['event']>[Name]>[0],
+  ) {
+    useEventEffect(useStoreManager(), arg1, arg2)
+  }
+
   return {
     Store,
-    useQuery: <Selection,>(
-      query: Query<Store['query'], Selection>,
-      isEqual?: (prev: Selection, next: Selection) => boolean,
-    ) => {
-      const manager = useStoreManager()
-
-      return useQuerySelector(manager, query, isEqual)
-    },
-    useCommand: <Selection = Store['command'],>(
-      query?: Query<Store['command'], Selection>,
-    ) => {
-      const manager = useStoreManager()
-
-      return useCommandSelector<Store, Selection>(manager, query) as Selection
-    },
-    useEvent: (query: Query<Store['event'], Unsubscriber>) => {
-      const manager = useStoreManager()
-
-      useEventEffect(manager, query)
-    },
+    useQuery,
+    useCommand,
+    useEvent,
   }
 }
