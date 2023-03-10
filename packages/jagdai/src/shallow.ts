@@ -1,4 +1,4 @@
-export function compare<Selection>(prev: Selection, next: Selection) {
+export function shallow<Selection>(prev: Selection, next: Selection) {
   if (Object.is(prev, next)) {
     return true
   }

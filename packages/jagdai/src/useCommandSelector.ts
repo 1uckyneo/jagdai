@@ -1,14 +1,11 @@
-import { StoreManager } from './storeManager'
-import type { Selector, StoreShape } from './types'
+import { Store } from './store'
+import type { Selector, StoreDefinition } from './jagdai'
 
 export function useCommandSelector<
-  Store extends StoreShape,
-  Selection = Store['command'],
->(
-  manager: StoreManager<Store>,
-  selector?: Selector<Store['command'], Selection>,
-) {
-  const commands = manager.getCommands()
+  T extends StoreDefinition,
+  Selection = T['command'],
+>(store: Store<T>, selector?: Selector<T['command'], Selection>) {
+  const commands = store.getCommands()
 
   if (selector) {
     return selector(commands)

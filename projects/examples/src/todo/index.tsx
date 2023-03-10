@@ -10,10 +10,10 @@ const Root = () => {
   )
 }
 
-const manager = document.getElementById('root')
+const container = document.getElementById('root')
 
-if (manager) {
-  const root = ReactDOMClient.createRoot(manager)
+if (container) {
+  const root = ReactDOMClient.createRoot(container)
 
   root.render(
     <StrictMode>

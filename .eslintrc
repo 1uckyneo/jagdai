@@ -11,7 +11,13 @@
       "jsx": true
     }
   },
-  "plugins": ["jest", "prefer-let", "prettier", "@typescript-eslint"],
+  "plugins": [
+    "jest",
+    "prefer-let",
+    "prettier",
+    "@typescript-eslint",
+    "react-hooks"
+  ],
   "rules": {
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",
@@ -172,7 +178,11 @@
       }
     },
     {
-      "files": ["**/__tests__/**/*.js", "**/__tests__/**/*.ts", "**/__tests__/**/*.tsx"],
+      "files": [
+        "**/__tests__/**/*.js",
+        "**/__tests__/**/*.ts",
+        "**/__tests__/**/*.tsx"
+      ],
       "env": {
         "jest": true
       },

@@ -7,14 +7,12 @@ export const Controls = () => {
    */
   const { increase, decrease, reset } = useCountCommand()
 
-  useCountEvent((event) =>
-    event.increaseEvent((arg) => {
-      console.log(arg)
-    }),
-  )
+  useCountEvent('increaseEvent', (arg) => {
+    console.log(arg)
+  })
 
-  useCountEvent('decreaseEvent', (count) => {
-    console.log(`decrease event and count: ${count}`)
+  useCountEvent('decreaseEvent', (arg) => {
+    console.log(arg)
   })
 
   return (

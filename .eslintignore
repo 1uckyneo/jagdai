@@ -1,7 +1,7 @@
-examples/.cache
+# examples/.cache
 node_modules
 dist
 cjs
 esm
 */**/expected
-projects/**
+# projects/**
