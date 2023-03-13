@@ -1,86 +1,96 @@
-# jagdai
+# Jagdai
 
-English | [中文]
+English | [中文] | [Қазақша🇰🇿]
 
-[english]: ./README.md
+[English]: ./README.md
 [中文]: ./README_zh_CN.md
+[Қазақша🇰🇿]: ./README_kk_KZ.md
 
-> A beginner-friendly state management solution for React.
+## What is Jagdai
+
+Jagdai (pronounced `/ʒɑʁdɑj/`, it means "state" or "situation" in Kazakh) is a React state and event management solution with almost no learning cost.
+
+- Almost no learning cost, easy to get started as long as you know how to use standard React Hook APIs.
+- Refactoring is easy for projects without using a state management library, in order to achieve excellent performance.
+- Simple and convenient cross-component event management approach.
+- Excellent TypeScript type inference.
 
 ## Installation
 
-Just wait a few more days.
+```base
+npm install jagdai
+```
 
 ## Usage
 
-Create a store
+### Create a store
 
-First, create a store using the create function in jagdai.
+First, create a **store** using the `create` function provided in `jagdai`.
 
-The argument for create is a function that is essentially a custom React hook.
+The `create` function requires you to pass in a custom React Hook that defines the **store**.
 
-This means that you can write any type of React hook in it, such as `useState`, `useEffect`, and `useMemo`.
+This means you can use all types of React Hooks inside the function body.
 
-Therefore, we can use native React hooks like `useState` to define our store state.
-
+You can define your Store state using standard React APIs like `useState`.
 
 ```typescript
 import { create } from 'jagdai'
-
 import { useState } from 'react'
 
-export const {
-  Store: CountStore,
-  useQuery: useCountQuery,
-} = create(() => {
+export const { Store: CounterStore, useQuery: useCounterQuery } = create(() => {
   const [count, setCount] = useState(0)
 
   return {
     query: {
       count,
-    }
+    },
   }
 })
 ```
 
-The return value of the custom hook passed to the `create` parameter is an object, which must contain the `query` object.
+However, the `create` function has specific requirements for the return value of the hook you pass as its parameter:
 
-We can customize the fields of `query` and bind the states defined in the function to them one by one.
+1. First, the return value must be an object.
+2. If you want to share state across components, you need to declare an object for its `query` field and bind the state you want to share to it, indicating that components can query and subscribe to these states.
 
 ---
 
-## Mount the Store component on the component tree
+### Mount the Store component on the component tree
 
-`create` returns an object, of which the `Store` field is a component. We renamed it to `CountStore` based on the usage scenario of this store (which is strongly encouraged).
+The `create` function will return an object, and the Store field is a component.
 
-We need to mount this `CountStore` component on our React tree node.
+> Here, we have renamed it to `CounterStore` based on the usage scenario of this Store (you should do the same).
 
-```typescript
+You need to mount the `CounterStore` component onto a node of the React tree.
+
+```jsx
 const CounterApp = () => {
   return (
-    <CountStore>
+    <CounterStore>
       <Count />
       <Controls />
-    </CountStore>
+    </CounterStore>
   )
 }
 ```
 
-Only in this way can its child components or even deeper components consume the states defined in `query` before.
+Only in this way can its child components and even deeper-level components consume the state defined in the `query`.
 
 ---
 
-Subscribe and consume state
+### Query and consume state
 
-The `useQuery` field returned by `create` is a hook, which subscribes to and consumes the states in the `query` field returned earlier.
+The `useQuery` field in the object returned by `create` is a React Hook that allows you to query and consume the state declared in the query field of the Store.
 
-We renamed it to `useCountQuery` (which is strongly recommended). We must pass a subscription function to it.
+You must pass it a selector as an argument so that it can listen for changes to the subscribed states and decide whether to re-render the component.
 
-Here, we subscribe to the `count` field in `query`. The component will only be re-rendered if `count` changes.
+> Here, `useQuery` is associated with `CounterStore`, so we have renamed it to `useCounterQuery` (you should do the same).
 
-```typescript
+For example, if you subscribe to the count field in the `query`, the component will only re-render when `count` updates.
+
+```jsx
 const Count = () => {
-  const count = useCountQuery((query) => query.count)
+  const count = useCounterQuery((query) => query.count)
 
   return <div>{count}</div>
 }
@@ -88,13 +98,13 @@ const Count = () => {
 
 ---
 
-## Notify the store to update the state from components
+### Sending commands to the store in a component
 
-As a hook parameter of `create` function, the return value of the hook has an optional field `command`, and all fields of `command` must be of function type.
+In addition to declaring the `query` field, you can also declare the `command` field when defining a store, which represents the commands that components can send to the store.
 
-We can define the function to update the state in the function body and bind it to the `command` field as a command.
+For example, you can define a function in the store-definition's function body to update the state and bind it to the `command` field.
 
-The last field returned by `create`, the `useCommand` hook, allows us to use these `command` in the component and notify the store to update the state from components.
+The object returned by `create` also has a `useCommand` field, which is also a Hook that allows you to send commands to the store in a component.
 
 ```typescript
 export const {
@@ -119,48 +129,149 @@ export const {
 })
 ```
 
-Here, we renamed it to `useCountCommand` (reminder 😄) and obtained the functions in the `command` field in the component through it.
+> Here, `useCommand` is associated with `CounterStore`, so we have renamed it to `useCounterCommand` (you should do the same).
 
-```typescript
+```jsx
 const Controls = () => {
-  const { increase } = useCountCommand()
+  const { increase } = useCounterCommand()
 
   return <button onClick={increase}>+</button>
 }
 ```
 
-Once we click the button, `increase` will be executed and update the `count` in the store.
-Then the component subscribed to `count` through `useCountQuery` will be triggered for re-rendering and receive the latest `count`.
+Whenever the button is clicked, `increase` is executed and updates the `count` in the store.
+
+Then, components subscribed to `count` through `useCounterQuery` are triggered to re-render and get the latest `count`.
 
 ---
 
-## Why do we need command-useCommand?
+### Why do we need `command`-`useCommand`?
 
-With the pair of `query` and `useQuery`, why do we still need `command` and `useCommand`?
+> With the pair of `query` and `useQuery`, I can share functions as a type of state with components. Why do we still need `command` and `useCommand`?
 
-The advantage of `useCommand` is that the function reference address it returns will not change.
+The advantage of `useCommand` is that **the component will never re-render because of it**
 
-This means that the component will never be re-rendered because of it, that is, it will not be re-rendered because of changes in the function reference in `command`.
+This is because the return value of `useCommand` is constant. This means that the component will never re-render because the function field defined in `command` points to a new function.
 
-But don't worry, although the function reference address returned by `useCommand` does not change, they can still call the latest function.
+However, don't worry: even though the return value of `useCommand` is constant, the function obtained in the component will still call the latest function in the store when invoked.
 
 ---
 
-## Query multiple states at once
+### Store-event
 
-Query multiple values and combine them into one value, and re-rendering will be triggered as long as either `query.salary` or `query.bonus` changes:
+In the process of developing business with React, having only state is sometimes not enough.
+
+For example, there may be scenarios where illegal command parameters are entered, and the Store state does not change but the component needs to be aware of it.
+
+> TypeScript can only help us avoid illegal parameter types, but in some cases we can only check at runtime, such as when some scenarios require server confirmation.
+
+#### Creating store-event
+
+In addition to `create`, Jagdai also provides the `useStoreEvent` hook for creating store-event.
+
+```typescript
+import { create, useStoreEvent } from 'jagdai'
+```
+
+You can use `useStoreEvent` in the function body where you define your store to create a **store-event**, and its return value is a function used to emit this event.
+
+> Emitting event can carry a parameter. If your project environment is based on TypeScript, you can specify the type of its parameter.
+
+```typescript
+export const {
+  Store: CounterStore,
+  useQuery: useCounterQuery,
+  useCommand: useCounterCommand,
+  useEvent: useCounterEvent,
+} = create(() => {
+  const [count, setCount] = useState(0)
+
+  const increase = () => {
+    setCount(count + 1)
+  }
+
+  const updateFail = useStoreEvent<string>()
+
+  const update = (num: number) => {
+    setCount(num)
+
+    if (count === num) {
+      updateFail(`The count is already ${count}`)
+    }
+  }
+
+  return {
+    query: {
+      count,
+    },
+    command: {
+      increase,
+      update,
+    },
+    event: {
+      updateFail,
+    },
+  }
+})
+```
+
+Here, based on the previous example, an `updateFail` **event** and an `update` **command** are added.
+
+The `update` command updates `count` to the number from the `update` argument, and if `count` and the `update` argument are already equal, it emits an `updateFail` event (calling itself) to indicate that `count` cannot be updated.
+
+Similar to `query` and `command`, if you want to subscribe to this event in a component, you need to bind the event to a field of the `event` object.
+
+The return value of `create` has a `useEvent` field, which is used to subscribe to events in the store from components.
+
+> As usual, it is renamed to `useCounterEvent` here (you should do the same).
+
+#### Subscribing to store-event
+
+`useEvent` takes two parameters:
+
+1. The event name, which must be one of the fields in the event object returned by the Hook parameter of `create`.
+2. The event listener function.
+
+```jsx
+const Controls = () => {
+  const { increase, update } = useCounterCommand()
+
+  useCounterEvent('updateFail', (arg) => {
+    console.log(arg)
+  })
+
+  return (
+    <>
+      <input
+        type="number"
+        onChange={(e) => {
+          setInput(parseInt(e.target.value, 10))
+        }}
+      />
+      <button onClick={() => update(input)}>update to {input}</button>
+      <button onClick={increase}>+</button>
+    </>
+  )
+}
+```
+
+---
+
+### Query multiple states at once
+
+Query multiple states and combine them into one value, and re-rendering will be triggered as long as either `query.salary` or `query.bonus` changes:
 
 ```typescript
 const income = useEmployeeQuery((query) => query.salary + query.bonus)
 ```
 
-Query multiple values and combine them into an array return, and re-rendering will be triggered as long as either `query.phone` or `query.email` changes:
+Query multiple states and combine them into an array return, and re-rendering will be triggered as long as either `query.phone` or `query.email` changes:
 
 ```typescript
 const [phone, email] = useUserQuery((query) => [query.phone, query.email])
 ```
 
-Query multiple values and combine them into an object return, and re-rendering will be triggered as long as either `query.firstName`, `query.lastName`, or `query.age` changes:
+Query multiple states and combine them into an object return, and re-rendering will be triggered as long as either `query.firstName`, `query.lastName`, or `query.age` changes:
 
 ```typescript
 const { name, age } = useUserQuery((query) => ({
@@ -169,37 +280,20 @@ const { name, age } = useUserQuery((query) => ({
 }))
 ```
 
-Whether `useQuery` triggers re-rendering depends on the comparison between the return value before its first parameter and the next return value.
+Whether `useQuery` triggers a re-render is determined by comparing the return value from its first function-type parameter between the previous and the next.
 
-By default, a strict comparison will be performed first. If `Object.is(old, new)` is true, there will be no re-rendering.
+By default, a strict comparison will be performed first. If `Object.is(old, new)` is `true`, there will be no re-rendering.
 
 If they are not strictly equal and are of the `object` type, such as an array, a shallow comparison will be performed. If they are still not equal, re-rendering will be triggered.
 
-The second parameter of `useQuery` is an optional function, and we can customize the comparison function to override this default behavior.
-
----
-
-## Who is this library for?
-
-First, the premise is that your project is using React.
-
-However, team members may not be very familiar with the React ecosystem, or the project may not be very familiar with it in the initial stage.
-
-Now, there are some performance bottlenecks in the cross-component state management of the project.
-
-And currently, a large amount of business code has been accumulated based on React's basic APIs such as `useState` and `useEffect`.
-
-Due to the difference in APIs, it is not practical to quickly refactor and migrate to popular community state management libraries.
-
-Then, the API design of **jagdai** may help you reduce the difficulty of migrating code.
+The second parameter of `useQuery` is an optional function, and you can customize the comparison function to override this default behavior.
 
 ---
 
 ## Inspiration
-- [Remesh](https://github.com/remesh-js/remesh) inspired the importance of distinguishing between **state/query** and **command**. The reason why jagdai distinguishes between `query`-`useQuery` combination and `command`-`useCommand` combination is for this reason. If conditions permit, I still hope you will consider Remesh as your first choice.
 
-- [zustand](https://github.com/pmndrs/zustand) was inspired by the use of selector-style parameters in `useQuery` as a way to subscribe/query state.
+- [Remesh](https://github.com/remesh-js/remesh) In Jagdai's design of APIs such as `query`, `command`, and `event`, there are many traces of imitation of Remesh. If the conditions are appropriate, especially for developing large projects, I hope that the more powerful and advanced Remesh can become your preferred choice.
 
-- [hox](https://github.com/umijs/hox) If I had known about it at the beginning, perhaps **jagdai** would not have appeared. Because the predecessor of **jagdai** was due to the situation mentioned in **Who is this library for**?
+- [Hox](https://github.com/umijs/hox) Jagdai was born because there was a project that did not use a state management library, and because the frequent re-renders caused performance problems that were unacceptable, a low-cost refactoring solution was needed. If we had known about Hox at that time, Jagdai might not have been created. In addition, the problem of nesting the same Store component within the Store component also borrowed the solution from Hox.
 
-- [ahooks](https://github.com/alibaba/hooks) To achieve the goal of "never triggering a re-render and being able to call the latest function" with `useCommand`, I spent a long time on it until I found inspiration from `useMemoizedFn` in **ahooks**.
+- [Zustand](https://github.com/pmndrs/zustand) The selector-style API of Zustand inspired the design of `useQuery`.

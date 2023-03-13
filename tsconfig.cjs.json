@@ -7,7 +7,7 @@
   "references": [
     {
       "path": "./packages/jagdai/tsconfig.cjs.json"
-    },
+    }
   ],
   "include": ["./packages"],
   "exclude": ["./packages/*/__tests__/*"]

@@ -1,1 +1,1 @@
-export * from './countStore'
+export * from './counterStore'

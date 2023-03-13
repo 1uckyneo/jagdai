@@ -4,10 +4,10 @@
     "noEmit": true,
     "module": "ESNext"
   },
-  "references": [ 
+  "references": [
     {
       "path": "./packages/jagdai/tsconfig.esm.json"
-    },
+    }
   ],
   "include": ["./packages"],
   "exclude": ["./packages/*/__tests__/*"]

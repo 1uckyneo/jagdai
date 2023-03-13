@@ -1,8 +1,18 @@
 {
   "name": "jagdai",
   "version": "0.1.1",
-  "description": "A beginner-friendly state management solution for React",
+  "description": "A React state and event management solution with almost no learning cost.",
+  "keywords": [
+    "react",
+    "state",
+    "event",
+    "manager",
+    "management",
+    "store"
+  ],
   "repository": "github:1uckyneo/jagdai",
+  "homepage": "github:1uckyneo/jagdai",
+  "license": "MIT",
   "bugs": "https://github.com/1uckyneo/jagdai/issues",
   "author": "https://github.com/1uckyneo",
   "main": "cjs/index.js",

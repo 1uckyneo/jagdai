@@ -19,8 +19,7 @@
   },
   "references": [
     {
-      "path": "../../packages/jagdai/tsconfig.esm.json",
-      // "path": "../../packages/jagdai/tsconfig.esm.json"
+      "path": "../../packages/jagdai/tsconfig.esm.json"
     }
   ],
   "include": ["src"]

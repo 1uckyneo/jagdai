@@ -55,6 +55,8 @@ export const {
         return todos.filter((todo) => todo.completed)
       case 'incomplete':
         return todos.filter((todo) => !todo.completed)
+      default:
+        return todos
     }
   }, [todos, filter])
 

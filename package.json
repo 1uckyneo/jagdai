@@ -1,7 +1,7 @@
 {
   "name": "jagdai",
   "license": "MIT",
-  "description": "A beginner-friendly state management solution for React",
+  "description": "A React state and event management solution with almost no learning cost.",
   "author": "https://github.com/1uckyneo",
   "private": true,
   "engines": {
@@ -21,7 +21,7 @@
     "lint": "eslint --report-unused-disable-directives ./packages",
     "format": "run-p format:source format:other",
     "format:other": "prettier ./**/*.{md,yml,json,html} --write",
-    "format:source": "prettier ./**/*.{ts,tsx,js,vue} --write",
+    "format:source": "prettier ./**/*.{ts,tsx,js} --write",
     "init": "pnpm install && pnpm run build",
     "test": "pnpm --filter \"./packages/**\" run test",
     "test:coverage": "pnpm --filter \"./packages/**\" run test:coverage ",

@@ -1,18 +1,18 @@
-import { useCountCommand, useCountEvent } from '../store/index'
+import { useCounterCommand, useCounterEvent } from '../store/index'
 
 export const Controls = () => {
   /**
    * useCountCommand(useCommand) hook will never cause re-render
    * but functions returns from it will remain latest
    */
-  const { increase, decrease, reset } = useCountCommand()
+  const { increase, decrease, reset } = useCounterCommand()
 
-  useCountEvent('increaseEvent', (arg) => {
-    console.log(arg)
+  useCounterEvent('even', (count) => {
+    console.log(`The count ${count} is even now`)
   })
 
-  useCountEvent('decreaseEvent', (arg) => {
-    console.log(arg)
+  useCounterEvent('resetUseless', (msg) => {
+    console.log(`${msg}. The event subscribed from <Controls />`)
   })
 
   return (
