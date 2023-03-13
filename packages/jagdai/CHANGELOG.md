@@ -1,5 +1,11 @@
 # jagdai
 
+## 0.2.0
+
+### Minor Changes
+
+- better store-event support
+
 ## 0.1.1
 
 ### Patch Changes

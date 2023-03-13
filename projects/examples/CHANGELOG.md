@@ -1,5 +1,16 @@
 # jagdai-examples
 
+## 0.1.0
+
+### Minor Changes
+
+- better store-event support
+
+### Patch Changes
+
+- Updated dependencies
+  - jagdai@0.2.0
+
 ## 0.0.6
 
 ### Patch Changes
