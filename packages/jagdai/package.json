@@ -31,7 +31,10 @@
     "esm",
     "src"
   ],
-  "scripts": {},
+  "scripts": {
+    "test": "jest --config=../../jest.config.js",
+    "test:coverage": "jest --config=../../jest.config.js --collectCoverage --coverage"
+  },
   "peerDependencies": {
     "react": "^16.10.0 || ^17.0.0 || ^18.0.0",
     "react-dom": "^16.10.0 || ^17.0.0 || ^18.0.0"
