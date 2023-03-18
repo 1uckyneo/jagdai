@@ -1,5 +1,11 @@
 # jagdai
 
+## 1.0.0
+
+### Major Changes
+
+- UT pass
+
 ## 0.2.1
 
 ### Patch Changes

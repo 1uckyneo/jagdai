@@ -1,5 +1,16 @@
 # jagdai-examples
 
+## 1.0.0
+
+### Major Changes
+
+- UT pass
+
+### Patch Changes
+
+- Updated dependencies
+  - jagdai@1.0.0
+
 ## 0.1.1
 
 ### Patch Changes
