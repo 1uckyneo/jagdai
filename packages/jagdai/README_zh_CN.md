@@ -6,14 +6,24 @@
 [中文]: ./README_zh_CN.md
 [Қазақша🇰🇿]: ./README_kk_KZ.md
 
+[![npm version](https://img.shields.io/npm/v/jagdai.svg?logo=npm)](https://www.npmjs.com/package/jagdai)
+[![bundle size](https://img.shields.io/bundlephobia/minzip/jagdai.svg?label=bundle%20size&logo=javascript)](https://www.npmjs.com/package/jagdai)
+![React](https://img.shields.io/npm/dependency-version/jagdai/peer/react?logo=react)
+
+> 一个几乎没有学习成本的 React 状态与事件管理方案
+
 ## 什么是 Jagdai?
 
-Jagdai（发音 `/ʒɑʁdɑj/`，哈萨克语含义「状态」或「情况」）一款几乎没有学习成本的 React 状态与事件管理方案。
+Jagdai（发音 `/ʒɑʁdɑj/`，哈萨克语含义「状态」或「情况」）是一个几乎没有学习成本的 React 状态与事件管理方案。
 
 - 几乎没有学习成本，只要会使用标准 React Hook APIs 就能轻松上手
 - 易于未使用状态管理库开发的项目重构，以获得优秀的性能
 - 简单、方便的跨组件事件管理方式
 - 优秀的 TypeScript 类型推导
+
+## 在线体验
+
+[![Edit](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/p/sandbox/jagdai-counter-demo-6mbbt3?file=%2Fsrc%2Fstore%2FcounterStore.ts)
 
 ## 安装
 
@@ -149,7 +159,7 @@ const Controls = () => {
 
 > 有了 `query` 和 `useQuery` 这对组合，我可以把函数当做一种 state 分享给组件。为什么还需要 `command` 和 `useCommand` 呢？
 
-`useCommand` 的优点是：**组件永远不会因为它而重渲染**
+`useCommand` 的优点是：**_组件永远不会因为它而重渲染_**
 
 因为它的返回值是恒定的。这意味组件永远不会因为你在 `command` 中定义的函数字段指向新的函数而重渲染
 
@@ -159,7 +169,7 @@ const Controls = () => {
 
 ### Store 事件
 
-在用 React 开发业务的过程中，有场景下光有 state 是不够的
+在用 React 开发项目的过程中，有场景下光有 state 是不够的
 
 比如，非法的 command 参数输入，Store state 不会改变但却要被组件感知的场景
 
@@ -186,18 +196,18 @@ export const {
 } = create(() => {
   const [count, setCount] = useState(0)
 
-  const increase = () => {
-    setCount(count + 1)
-  }
-
   const updateFail = useStoreEvent<string>()
 
-  const update = (num: number) => {
-    setCount(num)
+  const update = (value: number) => {
+    setCount(value)
 
-    if (count === num) {
+    if (value === count) {
       updateFail(`The count is already ${count}`)
     }
+  }
+
+  const increase = () => {
+    update(count + 1)
   }
 
   return {
@@ -239,6 +249,8 @@ const Controls = () => {
   useCounterEvent('updateFail', (arg) => {
     console.log(arg)
   })
+
+  const [input, setInput] = useState(0)
 
   return (
     <>
@@ -292,8 +304,8 @@ const { name, age } = useUserQuery((query) => ({
 
 ## 灵感来源
 
-- [Remesh](https://github.com/remesh-js/remesh) Jagdai 的 `query`, `command`, `event` 等 API 设计，存在许多对 Remesh 模仿的痕迹。如果条件合适，尤其是开发大型的项目，我希望更强大、更先进的 Remesh 成为你的首选。
+- [Remesh](https://github.com/remesh-js/remesh): Jagdai 的 `query`, `command`, `event` 等 API 设计，存在许多对 Remesh 模仿的痕迹。如果条件合适，尤其是开发大型的项目，我希望更强大、更先进的 Remesh 成为你的首选。
 
-- [Hox](https://github.com/umijs/hox) Jagdai 诞生的最初原因，是因为有一个未使用状态管理库的项目，因为重渲染太频繁，性能问题已经到了不可接受的程度，需要一个低成本的重构方案。当时要是知道已经有了 Hox，那 Jagdai 或许就不会诞生。另外 Store 组件中嵌套同一 Store 组件产生的问题，也借鉴了 Hox 的解决方案。
+- [Hox](https://github.com/umijs/hox): Jagdai 诞生的最初原因，是因为有一个未使用状态管理库的项目，因为重渲染太频繁，性能问题已经到了不可接受的程度，需要一个低成本的重构方案。当时要是知道已经有了 Hox，那 Jagdai 或许就不会诞生。另外 Store 组件中嵌套同一 Store 组件产生的问题，也借鉴了 Hox 的解决方案。
 
-- [Zustand](https://github.com/pmndrs/zustand) selector 风格的 API，启发了 `useQuery` 的设计。
+- [Zustand](https://github.com/pmndrs/zustand): selector 风格的 API，启发了 `useQuery` 的设计。

@@ -62,7 +62,6 @@ importers:
     specifiers:
       '@types/node': ^16.7.2
       '@types/react': ^18.0.3
-      '@types/react-dom': ^18.0.3
       '@types/use-sync-external-store': ^0.0.3
       react: ^18.1.0
       react-dom: ^18.1.0
@@ -76,7 +75,6 @@ importers:
     devDependencies:
       '@types/node': 16.18.16
       '@types/react': 18.0.28
-      '@types/react-dom': 18.0.11
       '@types/use-sync-external-store': 0.0.3
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
@@ -93,7 +91,7 @@ importers:
       '@vanilla-extract/vite-plugin': ^3.8.0
       '@vitejs/plugin-react': ^3.0.1
       fast-glob: ^3.2.11
-      jagdai: ^0.2.1
+      jagdai: ^1.0.0
       react: ^18.2.0
       react-dom: ^18.2.0
       rimraf: ^3.0.2

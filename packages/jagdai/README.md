@@ -6,7 +6,13 @@ English | [中文] | [Қазақша🇰🇿]
 [中文]: ./README_zh_CN.md
 [Қазақша🇰🇿]: ./README_kk_KZ.md
 
-## What is Jagdai
+[![npm version](https://img.shields.io/npm/v/jagdai.svg?logo=npm)](https://www.npmjs.com/package/jagdai)
+[![bundle size](https://img.shields.io/bundlephobia/minzip/jagdai.svg?label=bundle%20size&logo=javascript)](https://www.npmjs.com/package/jagdai)
+![React](https://img.shields.io/npm/dependency-version/jagdai/peer/react?logo=react)
+
+> A React state and event management solution with almost no learning cost.
+
+## What is Jagdai?
 
 Jagdai (pronounced `/ʒɑʁdɑj/`, it means "state" or "situation" in Kazakh) is a React state and event management solution with almost no learning cost.
 
@@ -14,6 +20,10 @@ Jagdai (pronounced `/ʒɑʁdɑj/`, it means "state" or "situation" in Kazakh) is
 - Refactoring is easy for projects without using a state management library, in order to achieve excellent performance.
 - Simple and convenient cross-component event management approach.
 - Excellent TypeScript type inference.
+
+## Try it on Codesandbox
+
+[![Edit](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/p/sandbox/jagdai-counter-demo-6mbbt3?file=%2Fsrc%2Fstore%2FcounterStore.ts)
 
 ## Installation
 
@@ -98,7 +108,7 @@ const Count = () => {
 
 ---
 
-### Sending commands to the store in a component
+### Sending commands to the store in components
 
 In addition to declaring the `query` field, you can also declare the `command` field when defining a store, which represents the commands that components can send to the store.
 
@@ -108,9 +118,9 @@ The object returned by `create` also has a `useCommand` field, which is also a H
 
 ```typescript
 export const {
-  Store: CountStore,
-  useQuery: useCountQuery,
-  useCommand: useCountCommand,
+  Store: CounterStore,
+  useQuery: useCounterQuery,
+  useCommand: useCounterCommand,
 } = create(() => {
   const [count, setCount] = useState(0)
 
@@ -145,15 +155,15 @@ Then, components subscribed to `count` through `useCounterQuery` are triggered t
 
 ---
 
-### Why do we need `command`-`useCommand`?
+### Why do I need `command`-`useCommand`?
 
-> With the pair of `query` and `useQuery`, I can share functions as a type of state with components. Why do we still need `command` and `useCommand`?
+> With the pair of `query` and `useQuery`, I can share functions as a type of state with components. Why do I still need `command` and `useCommand`?
 
-The advantage of `useCommand` is that **the component will never re-render because of it**
+The advantage of `useCommand` is that **_the component will never re-render because of it_**
 
 This is because the return value of `useCommand` is constant. This means that the component will never re-render because the function field defined in `command` points to a new function.
 
-However, don't worry: even though the return value of `useCommand` is constant, the function obtained in the component will still call the latest function in the store when invoked.
+But don't worry: even though the return value of `useCommand` is constant, the function obtained in the component will still call the latest function in the store when invoked.
 
 ---
 
@@ -186,18 +196,18 @@ export const {
 } = create(() => {
   const [count, setCount] = useState(0)
 
-  const increase = () => {
-    setCount(count + 1)
-  }
-
   const updateFail = useStoreEvent<string>()
 
-  const update = (num: number) => {
-    setCount(num)
+  const update = (value: number) => {
+    setCount(value)
 
-    if (count === num) {
+    if (value === count) {
       updateFail(`The count is already ${count}`)
     }
+  }
+
+  const increase = () => {
+    update(count + 1)
   }
 
   return {
@@ -219,7 +229,7 @@ Here, based on the previous example, an `updateFail` **event** and an `update` *
 
 The `update` command updates `count` to the number from the `update` argument, and if `count` and the `update` argument are already equal, it emits an `updateFail` event (calling itself) to indicate that `count` cannot be updated.
 
-Similar to `query` and `command`, if you want to subscribe to this event in a component, you need to bind the event to a field of the `event` object.
+Similar to `query` and `command`, if you want to subscribe to this event in components, you need to bind the event to a field of the `event` object.
 
 The return value of `create` has a `useEvent` field, which is used to subscribe to events in the store from components.
 
@@ -239,6 +249,8 @@ const Controls = () => {
   useCounterEvent('updateFail', (arg) => {
     console.log(arg)
   })
+
+  const [input, setInput] = useState(0)
 
   return (
     <>
@@ -292,8 +304,8 @@ The second parameter of `useQuery` is an optional function, and you can customiz
 
 ## Inspiration
 
-- [Remesh](https://github.com/remesh-js/remesh) In Jagdai's design of APIs such as `query`, `command`, and `event`, there are many traces of imitation of Remesh. If the conditions are appropriate, especially for developing large projects, I hope that the more powerful and advanced Remesh can become your preferred choice.
+- [Remesh](https://github.com/remesh-js/remesh): In Jagdai's design of APIs such as `query`, `command`, and `event`, there are many traces of imitation of Remesh. If the conditions are appropriate, especially for developing large projects, I hope that the more powerful and advanced Remesh can become your preferred choice.
 
-- [Hox](https://github.com/umijs/hox) Jagdai was born because there was a project that did not use a state management library, and because the frequent re-renders caused performance problems that were unacceptable, a low-cost refactoring solution was needed. If we had known about Hox at that time, Jagdai might not have been created. In addition, the problem of nesting the same Store component within the Store component also borrowed the solution from Hox.
+- [Hox](https://github.com/umijs/hox): Jagdai was born because there was a project that did not use a state management library, and because the frequent re-renders caused performance problems that were unacceptable, a low-cost refactoring solution was needed. If we had known about Hox at that time, Jagdai might not have been created. In addition, the problem of nesting the same Store component within the Store component also borrowed the solution from Hox.
 
-- [Zustand](https://github.com/pmndrs/zustand) The selector-style API of Zustand inspired the design of `useQuery`.
+- [Zustand](https://github.com/pmndrs/zustand): The selector-style API of Zustand inspired the design of `useQuery`.
