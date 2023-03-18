@@ -1,5 +1,13 @@
 # jagdai-examples
 
+## 1.0.1
+
+### Patch Changes
+
+- update deps
+- Updated dependencies
+  - jagdai@1.0.1
+
 ## 1.0.0
 
 ### Major Changes
