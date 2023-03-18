@@ -169,7 +169,7 @@ But don't worry: even though the return value of `useCommand` is constant, the f
 
 ### Store-event
 
-In the process of developing business with React, having only state is sometimes not enough.
+In the process of developing with React, having only state is sometimes not enough.
 
 For example, there may be scenarios where illegal command parameters are entered, and the Store state does not change but the component needs to be aware of it.
 
