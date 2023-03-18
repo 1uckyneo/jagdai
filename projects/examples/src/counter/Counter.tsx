@@ -1,4 +1,4 @@
-import { CountStore } from './store'
+import { CounterStore } from './store'
 import { Count, Controls } from './components'
 
 export const CounterApp = () => {
@@ -12,10 +12,10 @@ export const CounterApp = () => {
         margin: 30,
       }}>
       <h2>Counter</h2>
-      <CountStore>
+      <CounterStore>
         <Count />
         <Controls />
-      </CountStore>
+      </CounterStore>
     </div>
   )
 }

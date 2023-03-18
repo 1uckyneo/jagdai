@@ -11,8 +11,8 @@ export const Controls = () => {
     console.log(`The count ${count} is even now`)
   })
 
-  useCounterEvent('resetUseless', (msg) => {
-    console.log(`${msg}. The event subscribed from <Controls />`)
+  useCounterEvent('resetFail', (msg) => {
+    alert(msg)
   })
 
   return (

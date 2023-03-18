@@ -16,8 +16,8 @@ if (container) {
   const root = ReactDOMClient.createRoot(container)
 
   root.render(
-    // <StrictMode>
-    <Root />,
-    // </StrictMode>,
+    <StrictMode>
+      <Root />
+    </StrictMode>,
   )
 }

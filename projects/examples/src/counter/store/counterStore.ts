@@ -6,38 +6,38 @@ function isEven(num: number): boolean {
 }
 
 export const {
-  Store: CountStore,
+  Store: CounterStore,
   useQuery: useCounterQuery,
   useCommand: useCounterCommand,
   useEvent: useCounterEvent,
 } = create(() => {
   const [count, setCount] = useState(0)
 
-  const resetUseless = useStoreEvent<string>()
-
-  const even = useStoreEvent<number>()
-
   const increase = () => {
     setCount(count + 1)
   }
+
+  const decrease = () => {
+    setCount(count - 1)
+  }
+
+  const resetFail = useStoreEvent<string>()
+
+  const reset = () => {
+    setCount(0)
+
+    if (count === 0) {
+      resetFail('The count is already 0')
+    }
+  }
+
+  const even = useStoreEvent<number>()
 
   useEffect(() => {
     if (isEven(count)) {
       even(count)
     }
   }, [count])
-
-  const decrease = () => {
-    setCount(count - 1)
-  }
-
-  const reset = () => {
-    setCount(0)
-
-    if (count === 0) {
-      resetUseless('The count is already 0')
-    }
-  }
 
   return {
     query: {
@@ -50,7 +50,7 @@ export const {
     },
     event: {
       even,
-      resetUseless,
+      resetFail,
     },
   }
 })
