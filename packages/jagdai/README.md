@@ -21,7 +21,7 @@ Jagdai (pronounced `/ʒɑʁdɑj/`, it means "state" or "situation" in Kazakh) is
 - Simple and convenient cross-component event management approach.
 - Excellent TypeScript type inference.
 
-## Try it on Codesandbox
+## Try it on CodeSandbox
 
 [![Edit](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/p/sandbox/jagdai-counter-demo-6mbbt3?file=%2Fsrc%2Fstore%2FcounterStore.ts)
 

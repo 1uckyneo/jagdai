@@ -21,7 +21,7 @@ Jagdai(дыбысы `/ʒɑʁdɑj/`, Жағдай) Бұл, React state және e
 - Компоненттердің арасындағы оңай және қиынсұрапсыз event бақылау жолдары.
 - Өте жақсы TypeScript түрліктіруді барлады.
 
-## Оны Codesandbox-та сынақтауға болады.
+## Оны CodeSandbox-та сынақтауға болады.
 
 [![Edit](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/p/sandbox/jagdai-counter-demo-6mbbt3?file=%2Fsrc%2Fstore%2FcounterStore.ts)
 
