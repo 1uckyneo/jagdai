@@ -1,5 +1,11 @@
 # jagdai
 
+## 1.0.2
+
+### Patch Changes
+
+- rebuild with alignment dependencies
+
 ## 1.0.1
 
 ### Patch Changes

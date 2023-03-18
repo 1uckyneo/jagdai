@@ -1,5 +1,13 @@
 # jagdai-examples
 
+## 1.0.2
+
+### Patch Changes
+
+- rebuild with alignment dependencies
+- Updated dependencies
+  - jagdai@1.0.2
+
 ## 1.0.1
 
 ### Patch Changes
