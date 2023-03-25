@@ -1,5 +1,11 @@
 # jagdai
 
+## 2.0.0
+
+### Major Changes
+
+- useEvent with breaking change
+
 ## 1.0.2
 
 ### Patch Changes
