@@ -1,2 +1,2 @@
 export { create } from './create'
-export { useStoreEvent } from './useStoreEvent'
+export { useEvent } from './useEvent'

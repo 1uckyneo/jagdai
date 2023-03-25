@@ -2,7 +2,7 @@ import type { FC } from 'react'
 import { useState } from 'react'
 import { render, fireEvent } from '@testing-library/react'
 
-import { create, useStoreEvent } from '../src'
+import { create, useEvent } from '../src'
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore config react testing environment
@@ -11,13 +11,13 @@ globalThis.IS_REACT_ACT_ENVIRONMENT = true
 describe('basic', () => {
   const {
     Store: CounterStore,
-    useQuery: useCounterQuery,
-    useCommand: useCounterCommand,
-    useEvent: useCounterEvent,
+    useStoreQuery: useCounterQuery,
+    useStoreCommand: useCounterCommand,
+    useStoreEvent: useCounterEvent,
   } = create(() => {
     const [count, setCount] = useState(0)
 
-    const countChange = useStoreEvent<number>()
+    const countChange = useEvent<number>()
 
     const update = (value: number) => {
       setCount(value)
@@ -69,7 +69,7 @@ describe('basic', () => {
     await findByText('count: 1')
   })
 
-  it('useCommand should not cause re-render but remain latest command', async () => {
+  it('useStoreCommand should not cause re-render but remain latest command', async () => {
     const controlsRenderSpy = jest.fn()
     const countRenderSpy = jest.fn()
 

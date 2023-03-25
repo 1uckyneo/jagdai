@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useRef } from 'react'
 import { Store } from './store'
 import type { StoreDefinition } from './jagdai'
-import { INTERNAL_STORE_EVENT_SUBSCRIBE } from './jagdai'
+import { INTERNAL_JAGDAI_EVENT_SUBSCRIBE } from './jagdai'
 
 export const useEventSubscription = <
   T extends StoreDefinition,
@@ -10,7 +10,7 @@ export const useEventSubscription = <
   store: Store<T>,
   name: Name,
   listener: Parameters<
-    NonNullable<T['event']>[Name][typeof INTERNAL_STORE_EVENT_SUBSCRIBE]
+    NonNullable<T['event']>[Name][typeof INTERNAL_JAGDAI_EVENT_SUBSCRIBE]
   >[0],
 ) => {
   const listenerRef = useRef(listener)
@@ -23,12 +23,12 @@ export const useEventSubscription = <
     const events = store.getEvents()
 
     if (!events) {
-      throw Error("You didn't define any event")
+      throw Error("You didn't define any event for this store")
     }
 
     const event = events![name]
 
-    const unsubscribe = event[INTERNAL_STORE_EVENT_SUBSCRIBE](
+    const unsubscribe = event[INTERNAL_JAGDAI_EVENT_SUBSCRIBE](
       listenerRef.current,
     )
 

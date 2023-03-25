@@ -1,15 +1,14 @@
 /**
- * @inner This is inner a key of StoreEvent
+ * @inner This is inner a key of JagdaiEvent
  */
-export const INTERNAL_STORE_EVENT_SUBSCRIBE: unique symbol = Symbol(
-  'internal-store-event-subscribe',
+export const INTERNAL_JAGDAI_EVENT_SUBSCRIBE: unique symbol = Symbol(
+  'internal-jagdai-event-subscribe',
 )
 
 export type Listener<Arg> = (arg: Arg) => void
-export type Unsubscribe = () => void
 
-export type StoreEvent<Arg> = ((arg: Arg) => void) & {
-  [INTERNAL_STORE_EVENT_SUBSCRIBE]: (listener: Listener<Arg>) => Unsubscribe
+export type JagdaiEvent<Arg> = ((arg: Arg) => void) & {
+  [INTERNAL_JAGDAI_EVENT_SUBSCRIBE]: (listener: Listener<Arg>) => () => void
 }
 
 export type StoreDefinition<Arg = any> = {
@@ -20,7 +19,7 @@ export type StoreDefinition<Arg = any> = {
     [key: string]: (...args: any[]) => any
   }
   event?: {
-    [key: string]: StoreEvent<Arg>
+    [key: string]: JagdaiEvent<Arg>
   }
 }
 

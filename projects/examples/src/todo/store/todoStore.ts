@@ -11,8 +11,8 @@ type Filter = 'all' | 'incomplete' | 'completed'
 
 export const {
   Store: TodoStore,
-  useQuery: useTodoQuery,
-  useCommand: useTodoCommand,
+  useStoreQuery: useTodoQuery,
+  useStoreCommand: useTodoCommand,
 } = create(() => {
   const nextTodoIdRef = useRef(0)
   const [todos, setTodos] = useState<Todo[]>([])

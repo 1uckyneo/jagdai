@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { create, useStoreEvent } from 'jagdai'
+import { create, useEvent } from 'jagdai'
 
 function isEven(num: number): boolean {
   return num % 2 === 0
@@ -7,9 +7,9 @@ function isEven(num: number): boolean {
 
 export const {
   Store: CounterStore,
-  useQuery: useCounterQuery,
-  useCommand: useCounterCommand,
-  useEvent: useCounterEvent,
+  useStoreQuery: useCounterQuery,
+  useStoreCommand: useCounterCommand,
+  useStoreEvent: useCounterEvent,
 } = create(() => {
   const [count, setCount] = useState(0)
 
@@ -21,7 +21,7 @@ export const {
     setCount(count - 1)
   }
 
-  const resetFail = useStoreEvent<string>()
+  const resetFail = useEvent<string>()
 
   const reset = () => {
     setCount(0)
@@ -31,7 +31,7 @@ export const {
     }
   }
 
-  const even = useStoreEvent<number>()
+  const even = useEvent<number>()
 
   useEffect(() => {
     if (isEven(count)) {

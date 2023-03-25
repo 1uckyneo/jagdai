@@ -47,15 +47,17 @@ npm install jagdai
 import { create } from 'jagdai'
 import { useState } from 'react'
 
-export const { Store: CounterStore, useQuery: useCounterQuery } = create(() => {
-  const [count, setCount] = useState(0)
+export const { Store: CounterStore, useStoreQuery: useCounterQuery } = create(
+  () => {
+    const [count, setCount] = useState(0)
 
-  return {
-    query: {
-      count,
-    },
-  }
-})
+    return {
+      query: {
+        count,
+      },
+    }
+  },
+)
 ```
 
 只不过 `create` 的参数 hook 的返回值有所要求：
@@ -90,11 +92,11 @@ const CounterApp = () => {
 
 ### 查询并消费状态
 
-`create` 返回对象中的 `useQuery` 字段是一个 React Hook，它的作用是查询并消费你为 Store 声明的 `query` 字段中的状态
+`create` 返回对象中的 `useStoreQuery` 字段是一个 React Hook，它的作用是查询并消费你为 Store 声明的 `query` 字段中的状态
 
 你必须给它传参一个选择器，这样它会监听你订阅的 state 的变更与否来决定是否重渲染这个组件
 
-> 这里的 `useQuery` 与 `CounterStore` 关联, 所以将它重命名为 `useCounterQuery`（你也应该这么做）
+> 这里的 `useStoreQuery` 与 `CounterStore` 关联, 所以将它重命名为 `useCounterQuery`（你也应该这么做）
 
 比如这里订阅了 `query` 中的 `count` 字段，那只有 `count` 更新，这个组件才会重新渲染
 
@@ -114,13 +116,13 @@ const Count = () => {
 
 比如你可以在定义 store 的函数体内定义 更新 state 的函数，并把它绑定到 `command` 的字段上
 
-而 `create` 返回值中有 `useCommand` 字段，它同样是一个 Hook, 你可以利用它在组件中给 store 发送命令
+而 `create` 返回值中有 `useStoreCommand` 字段，它同样是一个 Hook, 你可以利用它在组件中给 store 发送命令
 
 ```typescript
 export const {
   Store: CounterStore,
-  useQuery: useCounterQuery,
-  useCommand: useCounterCommand,
+  useStoreQuery: useCounterQuery,
+  useStoreCommand: useCounterCommand,
 } = create(() => {
   const [count, setCount] = useState(0)
 
@@ -139,7 +141,7 @@ export const {
 })
 ```
 
-> 这里的 `useCommand` 与 `CounterStore` 关联, 所以将它重命名为 `useCounterCommand`（你也应该这么做）
+> 这里的 `useStoreCommand` 与 `CounterStore` 关联, 所以将它重命名为 `useCounterCommand`（你也应该这么做）
 
 ```jsx
 const Controls = () => {
@@ -155,15 +157,15 @@ const Controls = () => {
 
 ---
 
-### 为什么需要 command-useCommand
+### 为什么需要 command-useStoreCommand
 
-> 有了 `query` 和 `useQuery` 这对组合，我可以把函数当做一种 state 分享给组件。为什么还需要 `command` 和 `useCommand` 呢？
+> 有了 `query` 和 `useStoreQuery` 这对组合，我可以把函数当做一种 state 分享给组件。为什么还需要 `command` 和 `useStoreCommand` 呢？
 
-`useCommand` 的优点是：**_组件永远不会因为它而重渲染_**
+`useStoreCommand` 的优点是：**_组件永远不会因为它而重渲染_**
 
 因为它的返回值是恒定的。这意味组件永远不会因为你在 `command` 中定义的函数字段指向新的函数而重渲染
 
-但请不要担心，虽然 `useCommand` 的返回值是恒定的，但组件中拿到的函数在调用时，依然会调用 Store 中最新的函数
+但请不要担心，虽然 `useStoreCommand` 的返回值是恒定的，但组件中拿到的函数在调用时，依然会调用 Store 中最新的函数
 
 ---
 
@@ -177,26 +179,26 @@ const Controls = () => {
 
 #### 创建 store 事件
 
-Jagdai 除了 `create` 外还提供了 `useStoreEvent` 这个 Hook，用以创建 store 事件
+Jagdai 除了 `create` 外还提供了 `useEvent` 这个 Hook，用以创建 store 事件
 
 ```typescript
-import { create, useStoreEvent } from 'jagdai'
+import { create, useEvent } from 'jagdai'
 ```
 
-你可以在定义 Store 的函数体使用 `useStoreEvent` 创建一个 **store-event**，它的返回值是一个函数，用于发送这个事件
+你可以像使用 `useState` 定义一个 state 一样，使用 `useEvent` 定义一个 **store-event**，它的返回值是一个函数，用于发送这个事件
 
 > 发送事件可以携带一个参数。如果你的项目环境基于 TypeScript, 你可以为其参数指定类型
 
 ```typescript
 export const {
   Store: CounterStore,
-  useQuery: useCounterQuery,
-  useCommand: useCounterCommand,
-  useEvent: useCounterEvent,
+  useStoreQuery: useCounterQuery,
+  useStoreCommand: useCounterCommand,
+  useStoreEvent: useCounterEvent,
 } = create(() => {
   const [count, setCount] = useState(0)
 
-  const updateFail = useStoreEvent<string>()
+  const updateFail = useEvent<string>()
 
   const update = (value: number) => {
     setCount(value)
@@ -231,13 +233,13 @@ export const {
 
 就像 `query` 和 `command`, 如果你需要在组件中订阅这个事件就需要将事件绑定在 `event` 对象的字段上
 
-`create` 返回值中有 `useEvent` 字段，它的作用是在组件中订阅这个 Store 中的事件
+`create` 返回值中有 `useStoreEvent` 字段，它的作用是在组件中订阅这个 Store 中的事件
 
 > 依照惯例，这里将它重命名为了 `useCounterEvent`（你也应该这么做）
 
 #### 订阅 store 事件
 
-`useEvent` 需要两个参数:
+`useStoreEvent` 需要两个参数:
 
 1. 事件名称，必须是 `create` 参数 Hook 的返回值中 `event` 的字段之一
 2. 这个事件的监听函数
@@ -267,6 +269,14 @@ const Controls = () => {
 }
 ```
 
+如果你想在 store 内部订阅这个使用 `useEvent` 定义的事件，那也非常简单：只需要在用 `useEvent` 定义这个事件的时候，传参给它监听函数
+
+```typescript
+const updateFail = useEvent((reason: string) => {
+  console.log(`Update failed, the reason is ${reason}`)
+})
+```
+
 ---
 
 ### 一次查询多个 state
@@ -292,13 +302,13 @@ const { name, age } = useUserQuery((query) => ({
 }))
 ```
 
-`useQuery` 是否触发重渲染，是根据其第一个参数之前的返回值和下一次返回值之间做对比判断的
+`useStoreQuery` 是否触发重渲染，是根据其第一个参数之前的返回值和下一次返回值之间做对比判断的
 
 默认情况下，会先做一次严格比较， `Object.is(old, new)` 为 `true` 就不会重渲染
 
 如果不严格相等且为数组这种 `object` 类型的话就会经历一次浅比较，要是还不相等就会触发重渲染
 
-`useQuery` 第二个参数是个可选函数，你可以自定义比较函数覆盖这种默认情况
+`useStoreQuery` 第二个参数是个可选函数，你可以自定义比较函数覆盖这种默认情况
 
 ---
 
@@ -308,4 +318,4 @@ const { name, age } = useUserQuery((query) => ({
 
 - [Hox](https://github.com/umijs/hox): Jagdai 诞生的最初原因，是因为有一个未使用状态管理库的项目，因为重渲染太频繁，性能问题已经到了不可接受的程度，需要一个低成本的重构方案。当时要是知道已经有了 Hox，那 Jagdai 或许就不会诞生。另外 Store 组件中嵌套同一 Store 组件产生的问题，也借鉴了 Hox 的解决方案。
 
-- [Zustand](https://github.com/pmndrs/zustand): selector 风格的 API，启发了 `useQuery` 的设计。
+- [Zustand](https://github.com/pmndrs/zustand): selector 风格的 API，启发了 `useStoreQuery` 的设计。

@@ -2,7 +2,7 @@ import { useCounterCommand, useCounterEvent } from '../store/index'
 
 export const Controls = () => {
   /**
-   * useCountCommand(useCommand) hook will never cause re-render
+   * useCountCommand(useStoreCommand) hook will never cause re-render
    * but functions returns from it will remain latest
    */
   const { increase, decrease, reset } = useCounterCommand()

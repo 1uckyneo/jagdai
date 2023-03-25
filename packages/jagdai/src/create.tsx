@@ -13,11 +13,10 @@ import {
   useEffect,
   memo,
 } from 'react'
-import { INTERNAL_STORE_EVENT_SUBSCRIBE } from './jagdai'
+import { INTERNAL_JAGDAI_EVENT_SUBSCRIBE } from './jagdai'
 import { useCreation } from './useCreation'
 import { Store } from './store'
 import { useQuerySelector } from './useQuerySelector'
-import { useCommandSelector } from './useCommandSelector'
 import { useEventSubscription } from './useEventSubscription'
 
 import { IsolatorProvider, IsolatorConsumer } from './isolator'
@@ -92,23 +91,21 @@ export function create<T extends StoreDefinition, P extends EmptyProps>(
   const displayName = options?.name || 'JagdaiStore'
   FinalStoreProvider.displayName = displayName
 
-  function useQuery<Selection>(
+  function useStoreQuery<Selection>(
     selector: Selector<T['query'], Selection>,
     isEqual?: (prev: Selection, next: Selection) => boolean,
   ) {
     return useQuerySelector(useStore(), selector, isEqual)
   }
 
-  function useCommand<Selection = T['command']>(
-    selector?: Selector<T['command'], Selection>,
-  ) {
-    return useCommandSelector(useStore(), selector)
+  function useStoreCommand() {
+    return useStore().getCommands()
   }
 
-  function useEvent<Name extends keyof T['event']>(
+  function useStoreEvent<Name extends keyof T['event']>(
     name: Name,
     listener: Parameters<
-      NonNullable<T['event']>[Name][typeof INTERNAL_STORE_EVENT_SUBSCRIBE]
+      NonNullable<T['event']>[Name][typeof INTERNAL_JAGDAI_EVENT_SUBSCRIBE]
     >[0],
   ) {
     useEventSubscription(useStore(), name, listener)
@@ -116,8 +113,8 @@ export function create<T extends StoreDefinition, P extends EmptyProps>(
 
   return {
     Store: FinalStoreProvider,
-    useQuery,
-    useCommand,
-    useEvent,
+    useStoreQuery,
+    useStoreCommand,
+    useStoreEvent,
   }
 }
