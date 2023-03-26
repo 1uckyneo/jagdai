@@ -1,5 +1,5 @@
 import { Store } from './store'
-import type { Selector, StoreDefinition } from './jagdai'
+import type { StoreDefinition, QueryType } from './jagdai'
 import useSyncExternalStoreWithSelectorExport from 'use-sync-external-store/shim/with-selector'
 import { shallow } from './shallow'
 
@@ -8,7 +8,7 @@ const { useSyncExternalStoreWithSelector } =
 
 export const useQuerySelector = <T extends StoreDefinition, Selection>(
   store: Store<T>,
-  selector: Selector<T['query'], Selection>,
+  selector: (query: QueryType<T>) => Selection,
   isEqual?: (prev: Selection, next: Selection) => boolean,
 ) => {
   const selection = useSyncExternalStoreWithSelector(
@@ -19,7 +19,7 @@ export const useQuerySelector = <T extends StoreDefinition, Selection>(
         store.queryListeners.delete(onStoreChange)
       }
     },
-    () => store.getState(),
+    () => store.getState() as QueryType<T>,
     null, // TODO: getServerSnapshot
     selector,
     isEqual ?? shallow,

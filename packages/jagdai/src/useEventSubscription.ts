@@ -3,15 +3,20 @@ import { Store } from './store'
 import type { StoreDefinition } from './jagdai'
 import { INTERNAL_JAGDAI_EVENT_SUBSCRIBE } from './jagdai'
 
+export type EventListener<
+  T extends StoreDefinition,
+  Name extends keyof T['event'],
+> = Parameters<
+  NonNullable<T['event']>[Name][typeof INTERNAL_JAGDAI_EVENT_SUBSCRIBE]
+>[0]
+
 export const useEventSubscription = <
   T extends StoreDefinition,
   Name extends keyof T['event'],
 >(
   store: Store<T>,
   name: Name,
-  listener: Parameters<
-    NonNullable<T['event']>[Name][typeof INTERNAL_JAGDAI_EVENT_SUBSCRIBE]
-  >[0],
+  listener: EventListener<T, Name>,
 ) => {
   const listenerRef = useRef(listener)
 
@@ -27,6 +32,10 @@ export const useEventSubscription = <
     }
 
     const event = events![name]
+
+    if (event === undefined) {
+      throw Error(`No such event called ${String(name)} in this store`)
+    }
 
     const unsubscribe = event[INTERNAL_JAGDAI_EVENT_SUBSCRIBE](
       listenerRef.current,

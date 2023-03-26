@@ -2,9 +2,11 @@ import type { FC, PropsWithChildren } from 'react'
 import type {
   StoreDefinition,
   ValidStoreOutput,
-  Selector,
   Capitalize,
+  QueryType,
+  CommandType,
 } from './jagdai'
+import type { EventListener } from './useEventSubscription'
 
 import {
   createContext,
@@ -13,7 +15,6 @@ import {
   useEffect,
   memo,
 } from 'react'
-import { INTERNAL_JAGDAI_EVENT_SUBSCRIBE } from './jagdai'
 import { useCreation } from './useCreation'
 import { Store } from './store'
 import { useQuerySelector } from './useQuerySelector'
@@ -92,21 +93,19 @@ export function create<T extends StoreDefinition, P extends EmptyProps>(
   FinalStoreProvider.displayName = displayName
 
   function useStoreQuery<Selection>(
-    selector: Selector<T['query'], Selection>,
+    selector: (query: QueryType<T>) => Selection,
     isEqual?: (prev: Selection, next: Selection) => boolean,
   ) {
     return useQuerySelector(useStore(), selector, isEqual)
   }
 
   function useStoreCommand() {
-    return useStore().getCommands()
+    return useStore().getCommands() as CommandType<T>
   }
 
   function useStoreEvent<Name extends keyof T['event']>(
     name: Name,
-    listener: Parameters<
-      NonNullable<T['event']>[Name][typeof INTERNAL_JAGDAI_EVENT_SUBSCRIBE]
-    >[0],
+    listener: EventListener<T, Name>,
   ) {
     useEventSubscription(useStore(), name, listener)
   }

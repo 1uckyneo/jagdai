@@ -1,5 +1,5 @@
 /**
- * @inner This is inner a key of JagdaiEvent
+ * @inner This is a inner key of JagdaiEvent
  */
 export const INTERNAL_JAGDAI_EVENT_SUBSCRIBE: unique symbol = Symbol(
   'internal-jagdai-event-subscribe',
@@ -11,24 +11,37 @@ export type JagdaiEvent<Arg> = ((arg: Arg) => void) & {
   [INTERNAL_JAGDAI_EVENT_SUBSCRIBE]: (listener: Listener<Arg>) => () => void
 }
 
-export type StoreDefinition<Arg = any> = {
-  query?: {
+type StoreOutput<Arg = any> = {
+  query: {
     [key: string]: unknown
   }
-  command?: {
+  command: {
     [key: string]: (...args: any[]) => any
   }
-  event?: {
+  event: {
     [key: string]: JagdaiEvent<Arg>
   }
 }
+
+export type StoreDefinition<Arg = any> = Partial<StoreOutput<Arg>>
 
 export type ValidStoreOutput<T> = Required<{
   [key in keyof T]: key extends keyof StoreDefinition ? T[key] : never
 }>
 
-export type Selector<Snapshot, Selection> = (query: Snapshot) => Selection
+export type QueryType<T extends StoreDefinition, U = undefined> = T extends {
+  query: infer Q
+}
+  ? Q
+  : U
 
+export type CommandType<T extends StoreDefinition, U = undefined> = T extends {
+  command: infer C
+}
+  ? C
+  : U
+
+// for future
 type UpperChar =
   | 'A'
   | 'B'
