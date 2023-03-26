@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 import { create, useEvent } from 'jagdai'
 
-function isEven(num: number): boolean {
-  return num % 2 === 0
+function isOdd(num: number): boolean {
+  return num % 2 === 1
 }
 
 export const {
@@ -31,11 +31,13 @@ export const {
     }
   }
 
-  const onEven = useEvent<number>()
+  const onOdd = useEvent((value: number) => {
+    console.log(`The count is ${value} now, subscribed within CounterStore`)
+  })
 
   useEffect(() => {
-    if (isEven(count)) {
-      onEven(count)
+    if (isOdd(count)) {
+      onOdd(count)
     }
   }, [count])
 
@@ -49,7 +51,7 @@ export const {
       reset,
     },
     event: {
-      onEven,
+      onOdd,
       onResetFail,
     },
   }

@@ -5,7 +5,7 @@ export const Count = () => {
   const count = useCounterQuery((query) => query.count)
 
   useCounterEvent('onResetFail', (msg) => {
-    console.log(`${msg}. Subscribed from <Count />`)
+    console.log(`${msg}, subscribed from <Count />`)
   })
 
   return (
