@@ -1,5 +1,13 @@
 # jagdai-examples
 
+## 2.0.1
+
+### Patch Changes
+
+- fix: type inference
+- Updated dependencies
+  - jagdai@2.0.1
+
 ## 2.0.0
 
 ### Major Changes
