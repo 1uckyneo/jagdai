@@ -1,6 +1,6 @@
 {
   "name": "jagdai",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "A React state and event management solution with almost no learning cost.",
   "keywords": [
     "react",

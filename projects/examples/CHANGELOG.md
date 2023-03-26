@@ -1,5 +1,13 @@
 # jagdai-examples
 
+## 2.0.2
+
+### Patch Changes
+
+- fix useEvent
+- Updated dependencies
+  - jagdai@2.0.2
+
 ## 2.0.1
 
 ### Patch Changes
