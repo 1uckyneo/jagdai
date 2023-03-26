@@ -1,4 +1,4 @@
-export function shallow<Selection>(prev: Selection, next: Selection) {
+export function shallow<T>(prev: T, next: T) {
   if (Object.is(prev, next)) {
     return true
   }

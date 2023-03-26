@@ -198,13 +198,13 @@ export const {
 } = create(() => {
   const [count, setCount] = useState(0)
 
-  const updateFail = useEvent<string>()
+  const onUpdateFail = useEvent<string>()
 
   const update = (value: number) => {
     setCount(value)
 
     if (value === count) {
-      updateFail(`The count is already ${count}`)
+      onUpdateFail(`The count is already ${count}`)
     }
   }
 
@@ -221,15 +221,15 @@ export const {
       update,
     },
     event: {
-      updateFail,
+      onUpdateFail,
     },
   }
 })
 ```
 
-Here, based on the previous example, an `updateFail` **event** and an `update` **command** are added.
+Here, based on the previous example, an `onUpdateFail` **event** and an `update` **command** are added.
 
-The `update` command updates `count` to the number from the `update` argument, and if `count` and the `update` argument are already equal, it emits an `updateFail` event (calling itself) to indicate that `count` cannot be updated.
+The `update` command updates `count` to the number from the `update` argument, and if `count` and the `update` argument are already equal, it emits an `onUpdateFail` event (calling itself) to indicate that `count` cannot be updated.
 
 Similar to `query` and `command`, if you want to subscribe to this event in components, you need to bind the event to a field of the `event` object.
 
@@ -248,7 +248,7 @@ The return value of `create` has a `useStoreEvent` field, which is used to subsc
 const Controls = () => {
   const { increase, update } = useCounterCommand()
 
-  useCounterEvent('updateFail', (arg) => {
+  useCounterEvent('onUpdateFail', (arg) => {
     console.log(arg)
   })
 
@@ -272,7 +272,7 @@ const Controls = () => {
 If you also want to subscribe to the _event_ defined using `useEvent` within the store, it's also very simple: just pass the listener function as a parameter when defining the _event_ using `useEvent`.
 
 ```typescript
-const updateFail = useEvent((reason: string) => {
+const onUpdateFail = useEvent((reason: string) => {
   console.log(`Update failed, the reason is ${reason}`)
 })
 ```

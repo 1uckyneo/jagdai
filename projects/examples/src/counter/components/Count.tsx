@@ -4,7 +4,7 @@ export const Count = () => {
   // only re-render when count change
   const count = useCounterQuery((query) => query.count)
 
-  useCounterEvent('resetFail', (msg) => {
+  useCounterEvent('onResetFail', (msg) => {
     console.log(`${msg}. Subscribed from <Count />`)
   })
 

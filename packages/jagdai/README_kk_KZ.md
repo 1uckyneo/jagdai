@@ -184,13 +184,13 @@ export const {
 } = create(() => {
   const [count, setCount] = useState(0)
 
-  const updateFail = useEvent<string>()
+  const onUpdateFail = useEvent<string>()
 
   const update = (value: number) => {
     setCount(value)
 
     if (value === count) {
-      updateFail(`The count is already ${count}`)
+      onUpdateFail(`The count is already ${count}`)
     }
   }
 
@@ -207,15 +207,15 @@ export const {
       update,
     },
     event: {
-      updateFail,
+      onUpdateFail,
     },
   }
 })
 ```
 
-Мында өмірсіз `updateFail` **event** мен `update` **command** қосдық.
+Мында өмірсіз `onUpdateFail` **event** мен `update` **command** қосдық.
 
-`update` бағдарламасы `count`-ты `update` параметрінен келген сандармен жаңартады, және `count` және `update` параметрі алдымен бірдей болса, `count` жаңартуға болмай тұрғанын көрсету үшін (өзінан шақыру арқылы) `updateFail` оқиғасын шығарады.
+`update` бағдарламасы `count`-ты `update` параметрінен келген сандармен жаңартады, және `count` және `update` параметрі алдымен бірдей болса, `count` жаңартуға болмай тұрғанын көрсету үшін (өзінан шақыру арқылы) `onUpdateFail` оқиғасын шығарады.
 
 `query` және `command`-ға қарай, сіз осы оқиғаны компоненттік түрде жазылуы керек болсаңыз, оқиғаны `event` обьектінің кестесіне байлау керек.
 
@@ -234,7 +234,7 @@ export const {
 const Controls = () => {
   const { increase, update } = useCounterCommand()
 
-  useCounterEvent('updateFail', (arg) => {
+  useCounterEvent('onUpdateFail', (arg) => {
     console.log(arg)
   })
 
@@ -258,7 +258,7 @@ const Controls = () => {
 `useEvent` арқылы анықтауға болатын _event_-ке store ішінен де тіркелуге болады, әрі оған тыңдаушы функцияны аргумент ретінде ұтыстыру үшін көбірек қарапайым: тек `useEvent` арқылы _event_-ті анықтауға келген кезде, ол үшін тыңдаушы функцияны параметр ретінде таныстыру қажет.
 
 ```typescript
-const updateFail = useEvent((reason: string) => {
+const onUpdateFail = useEvent((reason: string) => {
   console.log(`Update failed, the reason is ${reason}`)
 })
 ```

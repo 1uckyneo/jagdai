@@ -92,9 +92,9 @@ export function create<T extends StoreDefinition, P extends EmptyProps>(
   const displayName = options?.name || 'JagdaiStore'
   FinalStoreProvider.displayName = displayName
 
-  function useStoreQuery<Selection>(
-    selector: (query: QueryType<T>) => Selection,
-    isEqual?: (prev: Selection, next: Selection) => boolean,
+  function useStoreQuery<QuerySlice>(
+    selector: (query: QueryType<T>) => QuerySlice,
+    isEqual?: (prev: QuerySlice, next: QuerySlice) => boolean,
   ) {
     return useQuerySelector(useStore(), selector, isEqual)
   }

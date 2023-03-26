@@ -198,13 +198,13 @@ export const {
 } = create(() => {
   const [count, setCount] = useState(0)
 
-  const updateFail = useEvent<string>()
+  const onUpdateFail = useEvent<string>()
 
   const update = (value: number) => {
     setCount(value)
 
     if (value === count) {
-      updateFail(`The count is already ${count}`)
+      onUpdateFail(`The count is already ${count}`)
     }
   }
 
@@ -221,15 +221,15 @@ export const {
       update,
     },
     event: {
-      updateFail,
+      onUpdateFail,
     },
   }
 })
 ```
 
-这里基于之前的示例，新增了一个 `updateFail` event，和 `update` command.
+这里基于之前的示例，新增了一个 `onUpdateFail` event，和 `update` command.
 
-`update` 的作用是将 `count` 更新至 `update` 参数的数字，并且在 `count` 和 `update` 参数已经相等的情况下，发送一个 `updateFail` 事件（调用它自己），表示 `count` 无法更新
+`update` 的作用是将 `count` 更新至 `update` 参数的数字，并且在 `count` 和 `update` 参数已经相等的情况下，发送一个 `onUpdateFail` 事件（调用它自己），表示 `count` 无法更新
 
 就像 `query` 和 `command`, 如果你需要在组件中订阅这个事件就需要将事件绑定在 `event` 对象的字段上
 
@@ -248,7 +248,7 @@ export const {
 const Controls = () => {
   const { increase, update } = useCounterCommand()
 
-  useCounterEvent('updateFail', (arg) => {
+  useCounterEvent('onUpdateFail', (arg) => {
     console.log(arg)
   })
 
@@ -272,7 +272,7 @@ const Controls = () => {
 如果你想在 store 内部订阅这个使用 `useEvent` 定义的事件，那也非常简单：只需要在用 `useEvent` 定义这个事件的时候，传参给它监听函数
 
 ```typescript
-const updateFail = useEvent((reason: string) => {
+const onUpdateFail = useEvent((reason: string) => {
   console.log(`Update failed, the reason is ${reason}`)
 })
 ```

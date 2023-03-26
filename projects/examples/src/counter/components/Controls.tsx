@@ -7,11 +7,11 @@ export const Controls = () => {
    */
   const { increase, decrease, reset } = useCounterCommand()
 
-  useCounterEvent('even', (count) => {
-    console.log(`The count ${count} is even now`)
+  useCounterEvent('onEven', (count) => {
+    console.log(`The count ${count} is onEven now`)
   })
 
-  useCounterEvent('resetFail', (msg) => {
+  useCounterEvent('onResetFail', (msg) => {
     alert(msg)
   })
 

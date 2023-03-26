@@ -21,21 +21,21 @@ export const {
     setCount(count - 1)
   }
 
-  const resetFail = useEvent<string>()
+  const onResetFail = useEvent<string>()
 
   const reset = () => {
     setCount(0)
 
     if (count === 0) {
-      resetFail('The count is already 0')
+      onResetFail('The count is already 0')
     }
   }
 
-  const even = useEvent<number>()
+  const onEven = useEvent<number>()
 
   useEffect(() => {
     if (isEven(count)) {
-      even(count)
+      onEven(count)
     }
   }, [count])
 
@@ -49,8 +49,8 @@ export const {
       reset,
     },
     event: {
-      even,
-      resetFail,
+      onEven,
+      onResetFail,
     },
   }
 })
