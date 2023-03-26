@@ -2,10 +2,10 @@ import type { FC, PropsWithChildren } from 'react'
 import type {
   StoreDefinition,
   ValidStoreOutput,
-  Capitalize,
   QueryType,
   CommandType,
 } from './jagdai'
+import type { Capitalize } from './utility'
 import type { EventListener } from './useEventSubscription'
 
 import {
@@ -15,6 +15,7 @@ import {
   useEffect,
   memo,
 } from 'react'
+import { None } from './utility'
 import { useCreation } from './useCreation'
 import { Store } from './store'
 import { useQuerySelector } from './useQuerySelector'
@@ -37,17 +38,15 @@ type Options<Props> = {
     | ((prevProps: Readonly<Props>, nextProps: Readonly<Props>) => boolean)
 }
 
-const EMPTY: unique symbol = Symbol('empty-context')
-
 export function create<T extends StoreDefinition, P extends EmptyProps>(
   hook: (props: PropsWithChildren<P>) => ValidStoreOutput<T>,
   options?: Options<P>,
 ) {
-  const StoreContext = createContext<Store<T> | typeof EMPTY>(EMPTY)
+  const StoreContext = createContext<Store<T> | typeof None>(None)
   const useStore = () => {
     const store = useContext(StoreContext)
 
-    if (store === EMPTY) {
+    if (store === None) {
       throw new Error('You may forget to add related store provider component')
     }
 

@@ -1,15 +1,12 @@
 import { useRef } from 'react'
+import { None } from './utility'
 
 export function useCreation<T>(factory: () => T) {
-  const { current } = useRef({
-    entity: undefined as undefined | T,
-    initialized: false,
-  })
+  const ref = useRef<T | typeof None>(None)
 
-  if (current.initialized === false) {
-    current.entity = factory()
-    current.initialized = true
+  if (ref.current === None) {
+    ref.current = factory()
   }
 
-  return current.entity as T
+  return ref.current as T
 }

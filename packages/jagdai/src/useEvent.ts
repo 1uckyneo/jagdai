@@ -1,6 +1,7 @@
 import type { JagdaiEvent, Listener } from './jagdai'
 import { INTERNAL_JAGDAI_EVENT_SUBSCRIBE } from './jagdai'
 import { useCreation } from './useCreation'
+import { useLazyRef } from './useLazyRef'
 import { useEffect } from 'react'
 
 class EventEmitter<Arg> {
@@ -30,12 +31,16 @@ export const useEvent = <Arg = void>(listener?: Listener<Arg>) => {
     })
   })
 
-  const unsubscribe =
-    listener && event[INTERNAL_JAGDAI_EVENT_SUBSCRIBE](listener)
+  const unsubscribeRef = useLazyRef(
+    () => listener && event[INTERNAL_JAGDAI_EVENT_SUBSCRIBE](listener),
+  )
 
   useEffect(() => {
+    unsubscribeRef.current =
+      listener && event[INTERNAL_JAGDAI_EVENT_SUBSCRIBE](listener)
+
     return () => {
-      unsubscribe?.()
+      unsubscribeRef.current?.()
     }
   })
 
