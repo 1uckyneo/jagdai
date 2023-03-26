@@ -17,13 +17,13 @@ describe('basic', () => {
   } = create(() => {
     const [count, setCount] = useState(0)
 
-    const countChange = useEvent<number>()
+    const onUpdate = useEvent<number>()
 
     const update = (value: number) => {
       setCount(value)
 
       if (count !== value) {
-        countChange(value)
+        onUpdate(value)
       }
     }
 
@@ -40,7 +40,7 @@ describe('basic', () => {
         increase,
       },
       event: {
-        countChange,
+        onUpdate,
       },
     }
   })
@@ -105,7 +105,7 @@ describe('basic', () => {
   })
 
   it('event listener should only called when event emitted', async () => {
-    const countChangeEventListener = jest.fn()
+    const onUpdateListener = jest.fn()
 
     const Count: FC = () => {
       const count = useCounterQuery((query) => query.count)
@@ -113,7 +113,7 @@ describe('basic', () => {
     }
 
     const Controls: FC = () => {
-      useCounterEvent('countChange', countChangeEventListener)
+      useCounterEvent('onUpdate', onUpdateListener)
 
       const { increase, update } = useCounterCommand()
 
@@ -137,27 +137,27 @@ describe('basic', () => {
 
     fireEvent.click(updateToOneBtn)
 
-    expect(countChangeEventListener).toHaveBeenCalledTimes(1)
-    expect(countChangeEventListener).toHaveBeenCalledWith(1)
+    expect(onUpdateListener).toHaveBeenCalledTimes(1)
+    expect(onUpdateListener).toHaveBeenCalledWith(1)
 
     fireEvent.click(updateToOneBtn)
 
-    expect(countChangeEventListener).not.toHaveBeenCalledTimes(2)
+    expect(onUpdateListener).not.toHaveBeenCalledTimes(2)
 
     fireEvent.click(increaseBtn)
 
-    expect(countChangeEventListener).toHaveBeenCalledTimes(2)
-    expect(countChangeEventListener).toHaveBeenCalledWith(2)
+    expect(onUpdateListener).toHaveBeenCalledTimes(2)
+    expect(onUpdateListener).toHaveBeenCalledWith(2)
   })
 
   it('event can subscribed by many', async () => {
-    const countChangeEventListener1 = jest.fn()
-    const countChangeEventListener2 = jest.fn()
+    const onUpdateListener1 = jest.fn()
+    const onUpdateListener2 = jest.fn()
 
     const Count: FC = () => {
       const count = useCounterQuery((query) => query.count)
 
-      useCounterEvent('countChange', countChangeEventListener1)
+      useCounterEvent('onUpdate', onUpdateListener1)
 
       return <div>count: {count}</div>
     }
@@ -165,7 +165,7 @@ describe('basic', () => {
     const Controls: FC = () => {
       const { increase } = useCounterCommand()
 
-      useCounterEvent('countChange', countChangeEventListener2)
+      useCounterEvent('onUpdate', onUpdateListener2)
 
       return <button onClick={increase}>increase</button>
     }
@@ -179,9 +179,61 @@ describe('basic', () => {
 
     fireEvent.click(getByText('increase'))
 
-    expect(countChangeEventListener1).toHaveBeenCalledTimes(1)
-    expect(countChangeEventListener1).toHaveBeenCalledWith(1)
-    expect(countChangeEventListener2).toHaveBeenCalledWith(1)
-    expect(countChangeEventListener2).toHaveBeenCalledWith(1)
+    expect(onUpdateListener1).toHaveBeenCalledTimes(1)
+    expect(onUpdateListener1).toHaveBeenCalledWith(1)
+    expect(onUpdateListener2).toHaveBeenCalledWith(1)
+    expect(onUpdateListener2).toHaveBeenCalledWith(1)
+  })
+
+  it('event can subscribed within store', async () => {
+    const onIncreasedListener1 = jest.fn<void, number[]>()
+    const onIncreasedListener2 = jest.fn()
+
+    const {
+      Store: CounterStore,
+      useStoreCommand: useCounterCommand,
+      useStoreEvent: useCounterEvent,
+    } = create(() => {
+      const [count, setCount] = useState(0)
+
+      const onIncreased = useEvent(onIncreasedListener1)
+
+      const increase = () => {
+        setCount(count + 1)
+        onIncreased(count + 1)
+      }
+
+      return {
+        command: {
+          increase,
+        },
+        event: {
+          onIncreased,
+        },
+      }
+    })
+
+    const Controls: FC = () => {
+      const { increase } = useCounterCommand()
+
+      useCounterEvent('onIncreased', onIncreasedListener2)
+
+      return <button onClick={increase}>increase</button>
+    }
+
+    const { getByText } = render(
+      <CounterStore>
+        <Controls />
+      </CounterStore>,
+    )
+
+    fireEvent.click(getByText('increase'))
+    fireEvent.click(getByText('increase'))
+    fireEvent.click(getByText('increase'))
+
+    expect(onIncreasedListener1).toHaveBeenCalledTimes(3)
+    expect(onIncreasedListener1).toHaveBeenCalledWith(3)
+    expect(onIncreasedListener2).toHaveBeenCalledWith(3)
+    expect(onIncreasedListener2).toHaveBeenCalledWith(3)
   })
 })
