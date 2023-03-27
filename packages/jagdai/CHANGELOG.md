@@ -1,5 +1,11 @@
 # jagdai
 
+## 2.0.3
+
+### Patch Changes
+
+- fix event subscription
+
 ## 2.0.2
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # jagdai-examples
 
+## 2.0.3
+
+### Patch Changes
+
+- fix event subscription
+- Updated dependencies
+  - jagdai@2.0.3
+
 ## 2.0.2
 
 ### Patch Changes
