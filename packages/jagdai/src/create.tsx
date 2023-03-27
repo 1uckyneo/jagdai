@@ -16,7 +16,7 @@ import {
   memo,
 } from 'react'
 import { None } from './utility'
-import { useCreation } from './useCreation'
+import { useLazyRef } from './useLazyRef'
 import { Store } from './store'
 import { useQuerySelector } from './useQuerySelector'
 import { useEventSubscription } from './useEventSubscription'
@@ -54,18 +54,18 @@ export function create<T extends StoreDefinition, P extends EmptyProps>(
   }
   const StoreExecutor: FC<PropsWithChildren<P>> = (props) => {
     const snapshot = hook(props)
-    const store = useCreation(() => new Store(snapshot))
+    const store = useLazyRef(() => new Store(snapshot))
 
     useLayoutEffect(() => {
-      store.update(snapshot)
+      store.current.update(snapshot)
     })
 
     useEffect(() => {
-      store.notifyQuery()
+      store.current.notifyQuery()
     })
 
     return (
-      <StoreContext.Provider value={store}>
+      <StoreContext.Provider value={store.current}>
         {props.children}
       </StoreContext.Provider>
     )

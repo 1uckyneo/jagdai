@@ -1,8 +1,7 @@
 import type { JagdaiEvent, Listener } from './jagdai'
 import { INTERNAL_JAGDAI_EVENT_SUBSCRIBE } from './jagdai'
-import { useCreation } from './useCreation'
 import { useLazyRef } from './useLazyRef'
-import { useEffect } from 'react'
+import { useRef, useLayoutEffect } from 'react'
 
 class EventEmitter<Arg> {
   private listeners = new Set<Listener<Arg>>()
@@ -23,7 +22,7 @@ class EventEmitter<Arg> {
 }
 
 export const useEvent = <Arg = void>(listener?: Listener<Arg>) => {
-  const event = useCreation<JagdaiEvent<Arg>>(() => {
+  const eventRef = useLazyRef<JagdaiEvent<Arg>>(() => {
     const event$ = new EventEmitter<Arg>()
 
     return Object.assign(event$.emit, {
@@ -32,17 +31,31 @@ export const useEvent = <Arg = void>(listener?: Listener<Arg>) => {
   })
 
   const unsubscribeRef = useLazyRef(
-    () => listener && event[INTERNAL_JAGDAI_EVENT_SUBSCRIBE](listener),
+    () =>
+      listener && eventRef.current[INTERNAL_JAGDAI_EVENT_SUBSCRIBE](listener),
   )
 
-  useEffect(() => {
-    unsubscribeRef.current =
-      listener && event[INTERNAL_JAGDAI_EVENT_SUBSCRIBE](listener)
+  const listenerRef = useRef(listener)
 
-    return () => {
-      unsubscribeRef.current?.()
-    }
+  useLayoutEffect(() => {
+    listenerRef.current = listener
   })
 
-  return event
+  useLayoutEffect(() => {
+    unsubscribeRef.current?.()
+    unsubscribeRef.current = undefined
+
+    const subscription: Listener<Arg> = (arg) => {
+      listenerRef.current?.(arg)
+    }
+
+    const unsubscribe =
+      eventRef.current[INTERNAL_JAGDAI_EVENT_SUBSCRIBE](subscription)
+
+    return () => {
+      unsubscribe()
+    }
+  }, [])
+
+  return eventRef.current
 }

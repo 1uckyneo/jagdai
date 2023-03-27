@@ -37,9 +37,11 @@ export const useEventSubscription = <
       throw Error(`No such event called ${String(name)} in this store`)
     }
 
-    const unsubscribe = event[INTERNAL_JAGDAI_EVENT_SUBSCRIBE](
-      listenerRef.current,
-    )
+    const subscription: EventListener<T, Name> = (arg) => {
+      listenerRef.current(arg)
+    }
+
+    const unsubscribe = event[INTERNAL_JAGDAI_EVENT_SUBSCRIBE](subscription)
 
     return () => {
       unsubscribe()
