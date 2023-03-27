@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { create, useEvent } from 'jagdai'
 
 function isOdd(num: number): boolean {
-  return num % 2 === 1
+  return num % 2 !== 0
 }
 
 export const {
@@ -32,7 +32,7 @@ export const {
   }
 
   const onOdd = useEvent((value: number) => {
-    console.log(`The count is ${value} now, subscribed within CounterStore`)
+    console.log(`The count ${value} is odd now, subscribed within CounterStore`)
   })
 
   useEffect(() => {

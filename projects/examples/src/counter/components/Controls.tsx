@@ -8,7 +8,7 @@ export const Controls = () => {
   const { increase, decrease, reset } = useCounterCommand()
 
   useCounterEvent('onOdd', (value) => {
-    console.log(`The count is ${value} now, subscribed from <Controls />`)
+    console.log(`The count ${value} is odd now, subscribed from <Controls />`)
   })
 
   useCounterEvent('onResetFail', (msg) => {
