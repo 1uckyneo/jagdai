@@ -1,17 +1,17 @@
-import { useCounterCommand, useCounterEvent } from '../store/index'
+import { CounterStore } from '../store'
 
 export const Controls = () => {
   /**
    * useCountCommand(useStoreCommand) hook will never cause re-render
    * but functions returns from it will remain latest
    */
-  const { increase, decrease, reset } = useCounterCommand()
+  const { increase, decrease, reset } = CounterStore.useCommand()
 
-  useCounterEvent('onOdd', (value) => {
+  CounterStore.useEvent('onOdd', (value) => {
     console.log(`The count ${value} is odd now, subscribed from <Controls />`)
   })
 
-  useCounterEvent('onResetFail', (msg) => {
+  CounterStore.useEvent('onResetFail', (msg) => {
     alert(msg)
   })
 

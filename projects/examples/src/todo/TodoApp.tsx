@@ -7,11 +7,11 @@ export const TodoApp = () => {
   return (
     <div>
       <h2>Todo</h2>
-      <TodoStore>
+      <TodoStore.Provider>
         <TodoAdder />
         <TodoList />
         <Filter />
-      </TodoStore>
+      </TodoStore.Provider>
     </div>
   )
 }

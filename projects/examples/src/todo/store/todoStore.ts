@@ -9,11 +9,7 @@ export type Todo = {
 
 type Filter = 'all' | 'incomplete' | 'completed'
 
-export const {
-  Store: TodoStore,
-  useStoreQuery: useTodoQuery,
-  useStoreCommand: useTodoCommand,
-} = create(() => {
+export const TodoStore = create(() => {
   const nextTodoIdRef = useRef(0)
   const [todos, setTodos] = useState<Todo[]>([])
 

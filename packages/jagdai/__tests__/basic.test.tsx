@@ -9,12 +9,7 @@ import { create, useEvent } from '../src'
 globalThis.IS_REACT_ACT_ENVIRONMENT = true
 
 describe('basic', () => {
-  const {
-    Store: CounterStore,
-    useStoreQuery: useCounterQuery,
-    useStoreCommand: useCounterCommand,
-    useStoreEvent: useCounterEvent,
-  } = create(() => {
+  const CounterStore = create(() => {
     const [count, setCount] = useState(0)
 
     const onUpdate = useEvent<number>()
@@ -47,21 +42,21 @@ describe('basic', () => {
 
   it('query and command should works', async () => {
     const Count: FC = () => {
-      const count = useCounterQuery((query) => query.count)
+      const count = CounterStore.useQuery((query) => query.count)
       return <div data-testid={'count'}>count: {count}</div>
     }
 
     const Controls: FC = () => {
-      const { increase } = useCounterCommand()
+      const { increase } = CounterStore.useCommand()
 
       return <button onClick={increase}>increase</button>
     }
 
     const { findByText, getByText } = render(
-      <CounterStore>
+      <CounterStore.Provider>
         <Count />
         <Controls />
-      </CounterStore>,
+      </CounterStore.Provider>,
     )
 
     fireEvent.click(getByText('increase'))
@@ -74,7 +69,7 @@ describe('basic', () => {
     const countRenderSpy = jest.fn()
 
     const Count: FC = () => {
-      const count = useCounterQuery((query) => query.count)
+      const count = CounterStore.useQuery((query) => query.count)
 
       countRenderSpy()
 
@@ -82,7 +77,7 @@ describe('basic', () => {
     }
 
     const Controls: FC = () => {
-      const { increase } = useCounterCommand()
+      const { increase } = CounterStore.useCommand()
 
       controlsRenderSpy()
 
@@ -90,10 +85,10 @@ describe('basic', () => {
     }
 
     const { findByText, getByText } = render(
-      <CounterStore>
+      <CounterStore.Provider>
         <Count />
         <Controls />
-      </CounterStore>,
+      </CounterStore.Provider>,
     )
 
     fireEvent.click(getByText('increase'))
@@ -108,14 +103,14 @@ describe('basic', () => {
     const onUpdateListener = jest.fn()
 
     const Count: FC = () => {
-      const count = useCounterQuery((query) => query.count)
+      const count = CounterStore.useQuery((query) => query.count)
       return <div>count: {count}</div>
     }
 
     const Controls: FC = () => {
-      useCounterEvent('onUpdate', onUpdateListener)
+      CounterStore.useEvent('onUpdate', onUpdateListener)
 
-      const { increase, update } = useCounterCommand()
+      const { increase, update } = CounterStore.useCommand()
 
       return (
         <div>
@@ -126,10 +121,10 @@ describe('basic', () => {
     }
 
     const { getByText } = render(
-      <CounterStore>
+      <CounterStore.Provider>
         <Count />
         <Controls />
-      </CounterStore>,
+      </CounterStore.Provider>,
     )
 
     const updateToOneBtn = getByText('update count to 1')
@@ -155,26 +150,26 @@ describe('basic', () => {
     const onUpdateListener2 = jest.fn()
 
     const Count: FC = () => {
-      const count = useCounterQuery((query) => query.count)
+      const count = CounterStore.useQuery((query) => query.count)
 
-      useCounterEvent('onUpdate', onUpdateListener1)
+      CounterStore.useEvent('onUpdate', onUpdateListener1)
 
       return <div>count: {count}</div>
     }
 
     const Controls: FC = () => {
-      const { increase } = useCounterCommand()
+      const { increase } = CounterStore.useCommand()
 
-      useCounterEvent('onUpdate', onUpdateListener2)
+      CounterStore.useEvent('onUpdate', onUpdateListener2)
 
       return <button onClick={increase}>increase</button>
     }
 
     const { getByText } = render(
-      <CounterStore>
+      <CounterStore.Provider>
         <Count />
         <Controls />
-      </CounterStore>,
+      </CounterStore.Provider>,
     )
 
     fireEvent.click(getByText('increase'))
@@ -189,11 +184,7 @@ describe('basic', () => {
     const onIncreasedListener1 = jest.fn<void, number[]>()
     const onIncreasedListener2 = jest.fn()
 
-    const {
-      Store: CounterStore,
-      useStoreCommand: useCounterCommand,
-      useStoreEvent: useCounterEvent,
-    } = create(() => {
+    const CounterStore = create(() => {
       const [count, setCount] = useState(0)
 
       const onIncreased = useEvent(onIncreasedListener1)
@@ -214,17 +205,17 @@ describe('basic', () => {
     })
 
     const Controls: FC = () => {
-      const { increase } = useCounterCommand()
+      const { increase } = CounterStore.useCommand()
 
-      useCounterEvent('onIncreased', onIncreasedListener2)
+      CounterStore.useEvent('onIncreased', onIncreasedListener2)
 
       return <button onClick={increase}>increase</button>
     }
 
     const { getByText } = render(
-      <CounterStore>
+      <CounterStore.Provider>
         <Controls />
-      </CounterStore>,
+      </CounterStore.Provider>,
     )
 
     fireEvent.click(getByText('increase'))

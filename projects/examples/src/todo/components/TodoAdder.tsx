@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
-import { useTodoCommand } from '../store'
+import { TodoStore } from '../store'
 
 export const TodoAdder: React.FC = () => {
-  const { addTodo } = useTodoCommand()
+  const { addTodo } = TodoStore.useCommand()
   const [input, setInput] = useState('')
 
   function handleAddTodo() {

@@ -12,10 +12,10 @@ export const CounterApp = () => {
         margin: 30,
       }}>
       <h2>Counter</h2>
-      <CounterStore>
+      <CounterStore.Provider>
         <Count />
         <Controls />
-      </CounterStore>
+      </CounterStore.Provider>
     </div>
   )
 }

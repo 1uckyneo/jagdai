@@ -8,7 +8,7 @@
     "node": ">=14.x"
   },
   "scripts": {
-    "dev": "cd projects/examples && npm run dev",
+    "start": "cd projects/examples && npm run dev",
     "build": "run-s clean:build build:source clean:tests",
     "build:cjs": "tsc -b ./tsconfig.cjs.json",
     "build:esm": "tsc -b ./tsconfig.esm.json && node build.esm",

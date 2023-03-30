@@ -1,10 +1,10 @@
-import { useCounterQuery, useCounterEvent } from '../store/index'
+import { CounterStore } from '../store/index'
 
 export const Count = () => {
   // only re-render when count change
-  const count = useCounterQuery((query) => query.count)
+  const count = CounterStore.useQuery((query) => query.count)
 
-  useCounterEvent('onResetFail', (msg) => {
+  CounterStore.useEvent('onResetFail', (msg) => {
     console.log(`${msg}, subscribed from <Count />`)
   })
 

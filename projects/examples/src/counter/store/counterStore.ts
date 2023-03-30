@@ -5,12 +5,7 @@ function isOdd(num: number): boolean {
   return num % 2 !== 0
 }
 
-export const {
-  Store: CounterStore,
-  useStoreQuery: useCounterQuery,
-  useStoreCommand: useCounterCommand,
-  useStoreEvent: useCounterEvent,
-} = create(() => {
+export const CounterStore = create(() => {
   const [count, setCount] = useState(0)
 
   const increase = () => {

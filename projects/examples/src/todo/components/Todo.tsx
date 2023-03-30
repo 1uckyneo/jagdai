@@ -1,8 +1,8 @@
 import React from 'react'
-import { useTodoCommand, Todo as TodoType } from '../store'
+import { TodoStore, Todo as TodoType } from '../store'
 
 export const Todo: React.FC<{ todo: TodoType }> = ({ todo }) => {
-  const toggleTodo = useTodoCommand((command) => command.toggleTodo)
+  const { toggleTodo } = TodoStore.useCommand()
 
   const handleClick = () => toggleTodo(todo.id)
 

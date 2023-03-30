@@ -5,7 +5,6 @@ import type {
   QueryType,
   CommandType,
 } from './jagdai'
-import type { Capitalize } from './utility'
 import type { EventListener } from './useEventSubscription'
 
 import {
@@ -16,7 +15,7 @@ import {
   memo,
 } from 'react'
 import { None } from './utility'
-import { useLazyRef } from './useLazyRef'
+import { useCreation } from './useCreation'
 import { Store } from './store'
 import { useQuerySelector } from './useQuerySelector'
 import { useEventSubscription } from './useEventSubscription'
@@ -26,10 +25,6 @@ import { IsolatorProvider, IsolatorConsumer } from './isolator'
 type EmptyProps = {}
 
 type Options<Props> = {
-  /**
-   * Prepare for future devtools
-   */
-  name?: Capitalize
   /**
    * Similar to React.memo
    */
@@ -43,6 +38,7 @@ export function create<T extends StoreDefinition, P extends EmptyProps>(
   options?: Options<P>,
 ) {
   const StoreContext = createContext<Store<T> | typeof None>(None)
+
   const useStore = () => {
     const store = useContext(StoreContext)
 
@@ -52,20 +48,21 @@ export function create<T extends StoreDefinition, P extends EmptyProps>(
 
     return store
   }
+
   const StoreExecutor: FC<PropsWithChildren<P>> = (props) => {
     const snapshot = hook(props)
-    const store = useLazyRef(() => new Store(snapshot))
+    const store = useCreation(() => new Store(snapshot))
 
     useLayoutEffect(() => {
-      store.current.update(snapshot)
+      store.update(snapshot)
     })
 
     useEffect(() => {
-      store.current.notifyQuery()
+      store.notifyQuery()
     })
 
     return (
-      <StoreContext.Provider value={store.current}>
+      <StoreContext.Provider value={store}>
         {props.children}
       </StoreContext.Provider>
     )
@@ -81,38 +78,35 @@ export function create<T extends StoreDefinition, P extends EmptyProps>(
     )
   }
 
-  const FinalStoreProvider = options?.memo
+  const Provider = options?.memo
     ? memo(
         StoreProvider,
         typeof options?.memo === 'function' ? options?.memo : undefined,
       )
     : StoreProvider
 
-  const displayName = options?.name || 'JagdaiStore'
-  FinalStoreProvider.displayName = displayName
-
-  function useStoreQuery<QuerySlice>(
+  const useQuery = <QuerySlice,>(
     selector: (query: QueryType<T>) => QuerySlice,
     isEqual?: (prev: QuerySlice, next: QuerySlice) => boolean,
-  ) {
+  ) => {
     return useQuerySelector(useStore(), selector, isEqual)
   }
 
-  function useStoreCommand() {
+  const useCommand = () => {
     return useStore().getCommands() as CommandType<T>
   }
 
-  function useStoreEvent<Name extends keyof T['event']>(
+  const useEvent = <Name extends keyof T['event']>(
     name: Name,
     listener: EventListener<T, Name>,
-  ) {
+  ) => {
     useEventSubscription(useStore(), name, listener)
   }
 
   return {
-    Store: FinalStoreProvider,
-    useStoreQuery,
-    useStoreCommand,
-    useStoreEvent,
+    Provider,
+    useQuery,
+    useCommand,
+    useEvent,
   }
 }

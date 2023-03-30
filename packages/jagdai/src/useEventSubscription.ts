@@ -46,5 +46,5 @@ export const useEventSubscription = <
     return () => {
       unsubscribe()
     }
-  }, [store, name])
+  }, [name, store])
 }

@@ -1,9 +1,9 @@
 import React from 'react'
-import { useTodoQuery, useTodoCommand } from '../store'
+import { TodoStore } from '../store'
 
 export const Filter: React.FC = () => {
-  const filter = useTodoQuery((query) => query.filter)
-  const { updateFilter } = useTodoCommand()
+  const filter = TodoStore.useQuery((query) => query.filter)
+  const { updateFilter } = TodoStore.useCommand()
 
   return (
     <div className="visibility-filters">

@@ -35,53 +35,51 @@ npm install jagdai
 
 ### Create a store
 
-First, create a **store** using the `create` function provided in `jagdai`.
+First, create a **store** using the `create` function provided in **jagdai**.
 
-The `create` function requires you to pass in a custom React Hook that defines the **store**.
+The `create` function requires you to pass in a custom React Hook that defines the store.
 
 This means you can use all types of React Hooks inside the function body.
 
-You can define your Store state using standard React APIs like `useState`.
+You can define your store state using standard React APIs like `useState`.
 
 ```typescript
 import { create } from 'jagdai'
 import { useState } from 'react'
 
-export const { Store: CounterStore, useStoreQuery: useCounterQuery } = create(
-  () => {
-    const [count, setCount] = useState(0)
+export const CounterStore = create(() => {
+  const [count, setCount] = useState(0)
 
-    return {
-      query: {
-        count,
-      },
-    }
-  },
-)
+  return {
+    query: {
+      count,
+    },
+  }
+})
 ```
 
 However, the `create` function has specific requirements for the return value of the hook you pass as its parameter:
 
 1. First, the return value must be an object.
-2. If you want to share state across components, you need to declare an object for its `query` field and bind the state you want to share to it, indicating that components can query and subscribe to these states.
+2. If you want to share cross-component state, you need to declare an object for its `query` field and bind the shared states one by one within it, indicating that components can query and subscribe to these states.
 
 ---
 
-### Mount the Store component on the component tree
+### Mount the store-provider component on the component tree
 
-The `create` function will return an object, and the Store field is a component.
+The create function will return an object, which has a `Provider` field that is a component.
 
-> Here, we have renamed it to `CounterStore` based on the usage scenario of this Store (you should do the same).
+> Here, we named it to `CounterStore` based on the usage scenario of this store.
 
-You need to mount the `CounterStore` component onto a node of the React tree.
+You need to mount the `CounterStore.Provider` component onto a node of the React tree.
 
 ```jsx
 const CounterApp = () => {
   return (
-    <CounterStore>
+    <CounterStore.Provider>
       <Count />
       <Controls />
-    </CounterStore>
+    </CounterStore.Provider>
   )
 }
 ```
@@ -92,17 +90,15 @@ Only in this way can its child components and even deeper-level components consu
 
 ### Query and consume state
 
-The `useStoreQuery` field in the object returned by `create` is a React Hook that allows you to query and consume the state declared in the query field of the Store.
+The `useQuery` field in the object returned by `create` is a React Hook that allows you to query and consume the state declared in the query field of the store.
 
 You must pass it a selector as an argument so that it can listen for changes to the subscribed states and decide whether to re-render the component.
-
-> Here, `useStoreQuery` is associated with `CounterStore`, so we have renamed it to `useCounterQuery` (you should do the same).
 
 For example, if you subscribe to the count field in the `query`, the component will only re-render when `count` updates.
 
 ```jsx
 const Count = () => {
-  const count = useCounterQuery((query) => query.count)
+  const count = CounterStore.useQuery((query) => query.count)
 
   return <div>{count}</div>
 }
@@ -116,14 +112,8 @@ In addition to declaring the `query` field, you can also declare the `command` f
 
 For example, you can define a function in the store-definition's function body to update the state and bind it to the `command` field.
 
-The object returned by `create` also has a `useStoreCommand` field, which is also a Hook that allows you to send commands to the store in a component.
-
 ```typescript
-export const {
-  Store: CounterStore,
-  useStoreQuery: useCounterQuery,
-  useStoreCommand: useCounterCommand,
-} = create(() => {
+export const CounterStore = create(() => {
   const [count, setCount] = useState(0)
 
   const increase = () => {
@@ -141,11 +131,11 @@ export const {
 })
 ```
 
-> Here, `useStoreCommand` is associated with `CounterStore`, so we have renamed it to `useCounterCommand` (you should do the same).
+And in the return value of `create`, there is a `useCommand` field, which is also a Hook. You can use it to obtain the commands sent to the store within a component.
 
 ```jsx
 const Controls = () => {
-  const { increase } = useCounterCommand()
+  const { increase } = CounterStore.useCommand()
 
   return <button onClick={increase}>+</button>
 }
@@ -153,19 +143,19 @@ const Controls = () => {
 
 Whenever the button is clicked, `increase` is executed and updates the `count` in the store.
 
-Then, components subscribed to `count` through `useCounterQuery` are triggered to re-render and get the latest `count`.
+Then, components subscribed to `count` through `CounterStore.useQuery` are triggered to re-render and get the latest `count`.
 
 ---
 
-### Why do I need `command`-`useStoreCommand`?
+### Why do I need `command`-`useCommand`?
 
-> With the pair of `query` and `useStoreQuery`, I can share functions as a type of state with components. Why do I still need `command` and `useStoreCommand`?
+> With the pair of `query` and `useQuery`, I can share functions as a type of state with components. Why do I still need `command` and `useCommand`?
 
-The advantage of `useStoreCommand` is that **_the component will never re-render because of it_**
+The advantage of `useCommand` is that **_the component will never re-render because of it_**
 
-This is because the return value of `useStoreCommand` is constant. This means that the component will never re-render because the function field defined in `command` points to a new function.
+This is because the return value of `useCommand` is constant. This means that the component will never re-render because the function field defined in `command` points to a new function.
 
-But don't worry: even though the return value of `useStoreCommand` is constant, the function obtained in the component will still call the latest function in the store when invoked.
+But don't worry: even though the return value of `useCommand` is constant, the function obtained in the component will still call the latest function in the store when invoked.
 
 ---
 
@@ -173,13 +163,13 @@ But don't worry: even though the return value of `useStoreCommand` is constant, 
 
 In the process of developing with React, having only state is sometimes not enough.
 
-For example, there may be scenarios where illegal command parameters are entered, and the Store state does not change but the component needs to be aware of it.
+For example, there may be scenarios where illegal command parameters are entered, and the store-state does not change but the component needs to be aware of it.
 
 > TypeScript can only help us avoid illegal parameter types, but in some cases we can only check at runtime, such as when some scenarios require server confirmation.
 
-#### Creating store-event
+#### Create a store-event
 
-In addition to `create`, Jagdai also provides the `useEvent` hook for creating store-event.
+In addition to `create`, Jagdai also provides the `useEvent` hook for creating store events.
 
 ```typescript
 import { create, useEvent } from 'jagdai'
@@ -190,12 +180,7 @@ You can define a _store-event_ using `useEvent` similar to how you define a _sta
 > Emitting event can carry a parameter. If your project environment is based on TypeScript, you can specify the type of its parameter.
 
 ```typescript
-export const {
-  Store: CounterStore,
-  useStoreQuery: useCounterQuery,
-  useStoreCommand: useCounterCommand,
-  useStoreEvent: useCounterEvent,
-} = create(() => {
+export const CounterStore = create(() => {
   const [count, setCount] = useState(0)
 
   const onUpdateFail = useEvent<string>()
@@ -233,22 +218,20 @@ The `update` command updates `count` to the number from the `update` argument, a
 
 Similar to `query` and `command`, if you want to subscribe to this event in components, you need to bind the event to a field of the `event` object.
 
-The return value of `create` has a `useStoreEvent` field, which is used to subscribe to events in the store from components.
-
-> As usual, it is renamed to `useCounterEvent` here (you should do the same).
+The return value of `create` has a `useEvent` field, which is used to subscribe to events in the store from components.
 
 #### Subscribing to store-event
 
-`useStoreEvent` takes two parameters:
+The `useEvent` field in the return value of `create` requires two parameters:
 
 1. The event name, which must be one of the fields in the event object returned by the Hook parameter of `create`.
 2. The event listener function.
 
 ```jsx
 const Controls = () => {
-  const { increase, update } = useCounterCommand()
+  const { increase, update } = CounterStore.useCommand()
 
-  useCounterEvent('onUpdateFail', (arg) => {
+  CounterStore.useEvent('onUpdateFail', (arg) => {
     console.log(arg)
   })
 
@@ -269,7 +252,9 @@ const Controls = () => {
 }
 ```
 
-If you also want to subscribe to the _event_ defined using `useEvent` within the store, it's also very simple: just pass the listener function as a parameter when defining the _event_ using `useEvent`.
+If you want to subscribe to the _event_ defined using `useEvent` within the store, it's also very simple:
+
+Just pass the listener function as a parameter when defining the _event_ using `useEvent`.
 
 ```typescript
 const onUpdateFail = useEvent((reason: string) => {
@@ -284,31 +269,31 @@ const onUpdateFail = useEvent((reason: string) => {
 Query multiple states and combine them into one value, and re-rendering will be triggered as long as either `query.salary` or `query.bonus` changes:
 
 ```typescript
-const income = useEmployeeQuery((query) => query.salary + query.bonus)
+const income = EmployeeStore.useQuery((query) => query.salary + query.bonus)
 ```
 
 Query multiple states and combine them into an array return, and re-rendering will be triggered as long as either `query.phone` or `query.email` changes:
 
 ```typescript
-const [phone, email] = useUserQuery((query) => [query.phone, query.email])
+const [phone, email] = UserStore.useQuery((query) => [query.phone, query.email])
 ```
 
 Query multiple states and combine them into an object return, and re-rendering will be triggered as long as either `query.firstName`, `query.lastName`, or `query.age` changes:
 
 ```typescript
-const { name, age } = useUserQuery((query) => ({
+const { name, age } = UserStore.useQuery((query) => ({
   name: `${query.firstName} ${query.lastName}`,
   age: query.age,
 }))
 ```
 
-Whether `useStoreQuery` triggers a re-render is determined by comparing the return value from its first function-type parameter between the previous and the next.
+Whether `useQuery` triggers a re-render is determined by comparing the return value from its first function-type parameter between the previous and the next.
 
 By default, a strict comparison will be performed first. If `Object.is(old, new)` is `true`, there will be no re-rendering.
 
 If they are not strictly equal and are of the `object` type, such as an array, a shallow comparison will be performed. If they are still not equal, re-rendering will be triggered.
 
-The second parameter of `useStoreQuery` is an optional function, and you can customize the comparison function to override this default behavior.
+The second parameter of `useQuery` is an optional function, and you can customize the comparison function to override this default behavior.
 
 ---
 
@@ -318,4 +303,4 @@ The second parameter of `useStoreQuery` is an optional function, and you can cus
 
 - [Hox](https://github.com/umijs/hox): Jagdai was born because there was a project that did not use a state management library, and because the frequent re-renders caused performance problems that were unacceptable, a low-cost refactoring solution was needed. If we had known about Hox at that time, Jagdai might not have been created. In addition, the problem of nesting the same Store component within the Store component also borrowed the solution from Hox.
 
-- [Zustand](https://github.com/pmndrs/zustand): The selector-style API of Zustand inspired the design of `useStoreQuery`.
+- [Zustand](https://github.com/pmndrs/zustand): The selector-style API of Zustand inspired the design of `useQuery`.
