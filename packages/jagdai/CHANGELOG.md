@@ -1,5 +1,11 @@
 # jagdai
 
+## 3.0.0
+
+### Major Changes
+
+- Breaking changes with shorter api
+
 ## 2.0.3
 
 ### Patch Changes
