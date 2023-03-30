@@ -131,7 +131,7 @@ export const CounterStore = create(() => {
 })
 ```
 
-而 `create` 返回值中有 `useCommand` 字段，它同样是一个 Hook, 你可以通过它在组件中取得给 store 发送的命令
+而 `create` 返回值中有 `useCommand` 字段，它同样是一个 Hook, 你可以通过它取得 store 中定义的命令
 
 ```jsx
 const Controls = () => {
@@ -218,7 +218,7 @@ export const CounterStore = create(() => {
 
 就像 `query` 和 `command`, 如果你需要在组件中订阅这个事件就需要将事件绑定在 `event` 对象的字段上
 
-`create` 返回值中有 `useEvent` 字段，它的作用是在组件中订阅这个 Store 中的事件
+`create` 返回值中有 `useEvent` 字段，它的作用是在组件中订阅这个 store 中的事件
 
 #### 订阅 store 事件
 

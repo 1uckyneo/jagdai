@@ -131,7 +131,7 @@ export const CounterStore = create(() => {
 })
 ```
 
-And in the return value of `create`, there is a `useCommand` field, which is also a Hook. You can use it to obtain the commands sent to the store within a component.
+The `create` return value contains a `useCommand` field, which is also a Hook. You can use it to access the commands defined in the store.
 
 ```jsx
 const Controls = () => {
