@@ -71,7 +71,7 @@ export const CounterStore = create(() => {
 
 > Мында осы store-дің қолданылу сценарийіне негізделіп, оны `CounterStore` деп атау керек.
 
-Сіз `CounterStore.Provider` компонентті React ағасының бір түйініне түйіңкеу керек.
+Сіз `Provider` компонентті React ағасының бір түйініне түйіңкеу керек.
 
 ```jsx
 const CounterApp = () => {

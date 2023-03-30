@@ -71,7 +71,7 @@ The create function will return an object, which has a `Provider` field that is 
 
 > Here, we named it to `CounterStore` based on the usage scenario of this store.
 
-You need to mount the `CounterStore.Provider` component onto a node of the React tree.
+You need to mount the `Provider` component onto a node of the React tree.
 
 ```jsx
 const CounterApp = () => {

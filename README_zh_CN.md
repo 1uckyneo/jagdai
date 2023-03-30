@@ -71,7 +71,7 @@ export const CounterStore = create(() => {
 
 > 这里根据这个 store 的使用场景将它命名为了 `CounterStore`
 
-你需要将这个 `CounterStore.Provider` 组件挂载到 React 树节点上
+你需要将这个 `Provider` 组件挂载到 React 树节点上
 
 ```jsx
 const CounterApp = () => {
