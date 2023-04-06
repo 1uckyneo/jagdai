@@ -25,8 +25,12 @@ type StoreOutput<Arg = any> = {
 
 export type StoreDefinition<Arg = any> = Partial<StoreOutput<Arg>>
 
+type AtLeastOneKey<T> = keyof T extends never ? never : T
+
 export type ValidStoreOutput<T> = Required<{
-  [key in keyof T]: key extends keyof StoreDefinition ? T[key] : never
+  [key in keyof T]: key extends keyof StoreDefinition
+    ? AtLeastOneKey<T[key]>
+    : never
 }>
 
 export type QueryType<T extends StoreDefinition, U = undefined> = T extends {
