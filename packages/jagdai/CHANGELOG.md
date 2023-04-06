@@ -1,5 +1,11 @@
 # jagdai
 
+## 3.0.1
+
+### Patch Changes
+
+- 1.remove symbol 2.optimize types 3.useEarliestEffect
+
 ## 3.0.0
 
 ### Major Changes
