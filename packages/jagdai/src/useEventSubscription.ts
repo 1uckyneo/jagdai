@@ -1,13 +1,12 @@
 import { useEffect, useLayoutEffect, useRef } from 'react'
 import { Store } from './store'
 import type { StoreDefinition } from './jagdai'
-import { INTERNAL_JAGDAI_EVENT_SUBSCRIBE } from './jagdai'
 
 export type EventListener<
   T extends StoreDefinition,
   Name extends keyof T['event'],
 > = Parameters<
-  NonNullable<T['event']>[Name][typeof INTERNAL_JAGDAI_EVENT_SUBSCRIBE]
+  ReturnType<NonNullable<T['event']>[Name]['getEventSubscriber']>
 >[0]
 
 export const useEventSubscription = <
@@ -41,7 +40,7 @@ export const useEventSubscription = <
       listenerRef.current(arg)
     }
 
-    const unsubscribe = event[INTERNAL_JAGDAI_EVENT_SUBSCRIBE](subscription)
+    const unsubscribe = event.getEventSubscriber()(subscription)
 
     return () => {
       unsubscribe()

@@ -1,5 +1,4 @@
 import type { JagdaiEvent, Listener } from './jagdai'
-import { INTERNAL_JAGDAI_EVENT_SUBSCRIBE } from './jagdai'
 import { useCreation } from './useCreation'
 import { useRef } from 'react'
 
@@ -28,13 +27,13 @@ export const useEvent = <Arg = void>(listener?: Listener<Arg>) => {
   return useCreation<JagdaiEvent<Arg>>(() => {
     const event$ = new EventEmitter<Arg>()
 
-    const emit = (arg: Arg) => {
+    const dispatcher = (arg: Arg) => {
       listenerRef.current?.(arg)
       event$.emit(arg)
     }
 
-    return Object.assign(emit, {
-      [INTERNAL_JAGDAI_EVENT_SUBSCRIBE]: event$.subscribe,
+    return Object.assign(dispatcher, {
+      getEventSubscriber: () => event$.subscribe,
     })
   })
 }

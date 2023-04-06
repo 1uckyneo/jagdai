@@ -1,14 +1,9 @@
-/**
- * @inner This is a inner key of JagdaiEvent
- */
-export const INTERNAL_JAGDAI_EVENT_SUBSCRIBE: unique symbol = Symbol(
-  'internal-jagdai-event-subscribe',
-)
-
 export type Listener<Arg> = (arg: Arg) => void
 
+type Subscriber<Arg> = (listener: Listener<Arg>) => () => void
+
 export type JagdaiEvent<Arg> = ((arg: Arg) => void) & {
-  [INTERNAL_JAGDAI_EVENT_SUBSCRIBE]: (listener: Listener<Arg>) => () => void
+  getEventSubscriber: () => Subscriber<Arg>
 }
 
 type StoreOutput<Arg = any> = {

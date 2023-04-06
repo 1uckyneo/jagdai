@@ -14,7 +14,6 @@ import {
   useEffect,
   memo,
 } from 'react'
-import { None } from './utility'
 import { useCreation } from './useCreation'
 import { Store } from './store'
 import { useQuerySelector } from './useQuerySelector'
@@ -37,12 +36,12 @@ export function create<T extends StoreDefinition, P extends EmptyProps>(
   hook: (props: PropsWithChildren<P>) => ValidStoreOutput<T>,
   options?: Options<P>,
 ) {
-  const StoreContext = createContext<Store<T> | typeof None>(None)
+  const StoreContext = createContext<Store<T> | undefined>(undefined)
 
   const useStore = () => {
     const store = useContext(StoreContext)
 
-    if (store === None) {
+    if (!store) {
       throw new Error('You may forget to add related store provider component')
     }
 
