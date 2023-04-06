@@ -1,4 +1,5 @@
-import { useEffect, useLayoutEffect, useRef } from 'react'
+import { useRef } from 'react'
+import { useEarliestEffect } from './useEarliestEffect'
 import { Store } from './store'
 import type { StoreDefinition } from './jagdai'
 
@@ -19,11 +20,11 @@ export const useEventSubscription = <
 ) => {
   const listenerRef = useRef(listener)
 
-  useLayoutEffect(() => {
+  useEarliestEffect(() => {
     listenerRef.current = listener
   })
 
-  useEffect(() => {
+  useEarliestEffect(() => {
     const events = store.getEvents()
 
     if (!events) {

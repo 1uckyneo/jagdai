@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 
-export function useCreation<T>(factory: () => T) {
+export const useCreation = <T>(factory: () => T) => {
   const ref = useRef({
     creation: undefined as undefined | T,
     done: false,

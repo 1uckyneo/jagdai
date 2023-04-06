@@ -1,4 +1,4 @@
-import type { FC, PropsWithChildren } from 'react'
+import { FC, PropsWithChildren, useEffect } from 'react'
 import type {
   StoreDefinition,
   ValidStoreOutput,
@@ -7,13 +7,8 @@ import type {
 } from './jagdai'
 import type { EventListener } from './useEventSubscription'
 
-import {
-  createContext,
-  useContext,
-  useLayoutEffect,
-  useEffect,
-  memo,
-} from 'react'
+import { createContext, useContext, memo } from 'react'
+import { useEarliestEffect } from './useEarliestEffect'
 import { useCreation } from './useCreation'
 import { Store } from './store'
 import { useQuerySelector } from './useQuerySelector'
@@ -32,10 +27,10 @@ type Options<Props> = {
     | ((prevProps: Readonly<Props>, nextProps: Readonly<Props>) => boolean)
 }
 
-export function create<T extends StoreDefinition, P extends EmptyProps>(
+export const create = <T extends StoreDefinition, P extends EmptyProps>(
   hook: (props: PropsWithChildren<P>) => ValidStoreOutput<T>,
   options?: Options<P>,
-) {
+) => {
   const StoreContext = createContext<Store<T> | undefined>(undefined)
 
   const useStore = () => {
@@ -52,7 +47,7 @@ export function create<T extends StoreDefinition, P extends EmptyProps>(
     const snapshot = hook(props)
     const store = useCreation(() => new Store(snapshot))
 
-    useLayoutEffect(() => {
+    useEarliestEffect(() => {
       store.update(snapshot)
     })
 
