@@ -25,7 +25,7 @@ export const useEventSubscription = <
   })
 
   useEarliestEffect(() => {
-    const events = store.getEvents()
+    const events = store.getEvent()
 
     if (!events) {
       throw Error("You didn't define any event for this store")

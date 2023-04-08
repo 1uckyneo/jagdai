@@ -87,7 +87,7 @@ export const create = <T extends StoreDefinition, P extends EmptyProps>(
   }
 
   const useCommand = () => {
-    return useStore().getCommands() as CommandType<T>
+    return useStore().getCommand() as CommandType<T>
   }
 
   const useEvent = <Name extends keyof T['event']>(

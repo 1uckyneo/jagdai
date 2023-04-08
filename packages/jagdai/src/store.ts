@@ -1,34 +1,32 @@
 import type { StoreDefinition } from './jagdai'
 
-type Listener = () => void
-
 export class Store<T extends StoreDefinition> {
-  private state: T['query']
-  queryListeners = new Set<Listener>()
-  private commands: T['command'] = undefined
-  private memoizedCommands: T['command'] = undefined
-  private events: T['event'] = undefined
+  private query: T['query']
+  private queryListeners = new Set<() => void>()
+  private command: T['command'] = undefined
+  private memoizedCommand: T['command'] = undefined
+  private event: T['event'] = undefined
 
   constructor(snapshot: T) {
-    this.state = snapshot.query
-    this.events = snapshot.event
+    this.query = snapshot.query
+    this.event = snapshot.event
 
     if (snapshot.command) {
-      this.memoizedCommands = {} as NonNullable<T['command']>
-      this.commands = snapshot.command
+      this.memoizedCommand = {} as NonNullable<T['command']>
+      this.command = snapshot.command
 
-      for (const key in this.commands) {
-        this.memoizedCommands[key] = (...arg) => {
-          return this.commands![key](...arg)
+      for (const key in this.command) {
+        this.memoizedCommand[key] = (...arg) => {
+          return this.command![key](...arg)
         }
       }
     }
   }
 
   update(snapshot: T) {
-    this.state = snapshot.query
-    this.commands = snapshot.command
-    this.events = snapshot.event
+    this.query = snapshot.query
+    this.command = snapshot.command
+    this.event = snapshot.event
   }
 
   notifyQuery() {
@@ -37,15 +35,23 @@ export class Store<T extends StoreDefinition> {
     }
   }
 
-  getState() {
-    return this.state
+  subscribeQuery = (triggerUpdate: () => void) => {
+    this.queryListeners.add(triggerUpdate)
+
+    return () => {
+      this.queryListeners.delete(triggerUpdate)
+    }
   }
 
-  getCommands() {
-    return this.memoizedCommands
+  getQuery = () => {
+    return this.query
   }
 
-  getEvents() {
-    return this.events
+  getCommand() {
+    return this.memoizedCommand
+  }
+
+  getEvent() {
+    return this.event
   }
 }
