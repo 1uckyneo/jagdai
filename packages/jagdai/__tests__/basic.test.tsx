@@ -64,7 +64,7 @@ describe('basic', () => {
     await findByText('count: 1')
   })
 
-  it('useStoreCommand should not cause re-render but remain latest command', async () => {
+  it('useCommand should not cause re-render but remain latest command', async () => {
     const controlsRenderSpy = jest.fn()
     const countRenderSpy = jest.fn()
 
