@@ -1,5 +1,13 @@
 # jagdai-examples
 
+## 3.0.2
+
+### Patch Changes
+
+- fix useQuerySelector compare function
+- Updated dependencies
+  - jagdai@3.0.2
+
 ## 3.0.1
 
 ### Patch Changes
