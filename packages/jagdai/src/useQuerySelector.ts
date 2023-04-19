@@ -33,7 +33,7 @@ const compare = <T extends StoreDefinition, QuerySlice>(
     return isEqual(prev, next)
   }
 
-  if (isObject(next) && isQuerySlice(query, next)) {
+  if (!isObject(next) || isQuerySlice(query, next)) {
     return Object.is(prev, next)
   }
 
