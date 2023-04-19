@@ -289,11 +289,12 @@ const { name, age } = UserStore.useQuery((query) => ({
 
 Whether `useQuery` triggers a re-render is determined by comparing the return value from its first function-type parameter between the previous and the next.
 
-By default, a strict comparison will be performed first. If `Object.is(old, new)` is `true`, there will be no re-rendering.
+By default:
 
-If they are not strictly equal and are of the `object` type, such as an array, a shallow comparison will be performed. If they are still not equal, re-rendering will be triggered.
+1. If the return value is not of the `object` type or belongs to the `query` field, it will use `Object.is(old, new)` for strict comparison. If they are not equal, a re-render will be triggered.
+2. If it is of the `object` type and does not belong to the `query` field, a `shallow` comparison will be performed between the object and the old value. If they are not equal, a re-render will be triggered.
 
-The second parameter of `useQuery` is an optional function, and you can customize the comparison function to override this default behavior.
+The second argument of `useQuery` is an optional function that allows you to define a custom comparison function to override this default behavior.
 
 ---
 
