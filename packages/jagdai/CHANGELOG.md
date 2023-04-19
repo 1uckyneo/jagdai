@@ -1,5 +1,11 @@
 # jagdai
 
+## 3.0.3
+
+### Patch Changes
+
+- optimize useQuerySelector/useCreation
+
 ## 3.0.2
 
 ### Patch Changes

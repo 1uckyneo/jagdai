@@ -1,5 +1,13 @@
 # jagdai-examples
 
+## 3.0.3
+
+### Patch Changes
+
+- optimize useQuerySelector/useCreation
+- Updated dependencies
+  - jagdai@3.0.3
+
 ## 3.0.2
 
 ### Patch Changes
