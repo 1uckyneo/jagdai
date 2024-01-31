@@ -1,5 +1,11 @@
 # jagdai
 
+## 4.0.0
+
+### Major Changes
+
+- 81c9838: New solution for shallow comparison
+
 ## 3.0.3
 
 ### Patch Changes

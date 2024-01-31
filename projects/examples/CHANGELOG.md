@@ -1,5 +1,16 @@
 # jagdai-examples
 
+## 4.0.0
+
+### Major Changes
+
+- 81c9838: New solution for shallow comparison
+
+### Patch Changes
+
+- Updated dependencies [81c9838]
+  - jagdai@4.0.0
+
 ## 3.0.3
 
 ### Patch Changes
