@@ -262,35 +262,46 @@ const onUpdateFail = useEvent((reason: string) => {
 
 ### Бірден бірнеше state ларды бақылау
 
-state-дарды біріктіру және `query.salary` не `query.bonus` өзгерістерінен байқау кезінде қайта құрастыру орындалады
+#### Примитивті типтер
 
 ```typescript
 const income = EmployeeStore.useQuery((query) => query.salary + query.bonus)
 ```
 
-state-дарды біріктіру және `query.phone` не `query.email` өзгерістерінен байқау кезінде массив ретінде қайта құрастыру орындалады
+Егер `query.salary` немесе `query.bonus` өзгерсе, компоненттің қайта жүктелуін тудырады.
+
+#### Беткі салыстыру
+
+Көптеген мемлекеттер объект түрінде біріктірілген кезде қайтарылады, `jagdai` беткі салыстыру арқылы жаңартуларды анықтау үшін `useShallow` функциясын ұсынады. Қолдану мынадай:
 
 ```typescript
-const [phone, email] = UserStore.useQuery((query) => [query.phone, query.email])
+import { useShallow } from 'jagdai'
+
+const [phone, email] = UserStore.useQuery(
+  useShallow((query) => [query.phone, query.email]),
+)
 ```
 
-state-дарды біріктіру және `query.firstName`, `query.lastName` не `query.age` өзгерістерінен байқау кезінде объект ретінде қайта құрастыру орындалады.
+Егер `query.phone` немесе `query.email` өзгерсе, компоненттің қайта жүктелуін тудырады.
 
 ```typescript
-const { name, age } = UserStore.useQuery((query) => ({
-  name: `${query.firstName} ${query.lastName}`,
-  age: query.age,
-}))
+import { useShallow } from 'jagdai'
+
+const { name, age } = UserStore.useQuery(
+  useShallow((query) => ({
+    name: `${query.firstName} ${query.lastName}`,
+    age: query.age,
+  })),
+)
 ```
 
-`useQuery` қайта суреттелеу тудыратын болып табылады, оның бірінші функциялық параметрінен қайтарылған мәнді алдыңғы мен келесі арасындағы салыстыру негізінде анықтау.
+Егер `query.firstName`, `query.lastName`, немесе `query.age` өзгерсе, компоненттің қайта жүктелуін тудырады.
 
-Әдепкі бойынша:
+Әдепкіде, useQuery өзгерістерді анықтау үшін `Object.is(old, new)` қатаң теңдік салыстыруын қолданады.
 
-1. Егер қайтарылған мән `object` типіне тән емес немесе `query` жолағына жатса, ол `Object.is(old, new)` функциясын қолданып нақты салыстыру жасайды. Егер олар тең емес болса, қайта суреттелеу тудыратын.
-2. Егер бұл `object` типіне және `query` жолағына жатпайтын болса, объект пен ескі мән арасында "жетім салыстыру" (`shallow` comparison) жасалады. Егер олар тең емес болса, қайта суреттелеу тудыратын.
+- `jagdai`-да, `useShallow` `useQuery` және беткі салыстыру әдісін пайдалану арқылы қайта жүктелу шешімін қабылдау үшін ұсынылады.
 
-`useQue`ry-нің екінші параметрі анықталмаған функциясы, сізге әдепкі сипаттаманы өзгерту үшін өз салыстыру функциясыңызды анықтау мүмкіндігін береді.
+- Күрделі жағдайлар үшін, `useQuery` екінші қосымша аргумент ұсынады, ол сізге әдепкі мінез-құлықты өзгерту үшін салыстыру функциясын теңшеуге мүмкіндік береді.
 
 ---
 

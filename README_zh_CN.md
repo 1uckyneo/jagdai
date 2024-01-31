@@ -266,35 +266,50 @@ const onUpdateFail = useEvent((reason: string) => {
 
 ### 一次查询多个 state
 
-一次查询多个状态并合并为一个值，只要 `query.salary` 或 `query.bonus` 其中一个改变就会触发重渲染：
+#### 基础类型
 
 ```typescript
 const income = EmployeeStore.useQuery((query) => query.salary + query.bonus)
 ```
 
-一次查询多个状态组合为数组返回，只要 `query.phone` 或 `query.email` 其中一个改变就会触发重渲染：
+只要 `query.salary` 或 `query.bonus` 其中一个改变就会触发组件重渲染
+
+#### 浅比较
+
+多个状态合并为对象类型返回，`jagdai` 中提供了 `useShallow` 以浅比较判断是否更新，用法如下：
 
 ```typescript
-const [phone, email] = UserStore.useQuery((query) => [query.phone, query.email])
+import { useShallow } from 'jagdai'
+
+// ...
+
+const [phone, email] = UserStore.useQuery(
+  useShallow((query) => [query.phone, query.email]),
+)
 ```
 
-一次查询多个状态组合为对象返回，只要 `query.firstName` 和 `query.lastName` 以及 `query.age` 其中一个改变就会触发重渲染：
+只要 `query.phone` 或 `query.email` 其中一个改变就会触发组件重渲染
 
 ```typescript
-const { name, age } = UserStore.useQuery((query) => ({
-  name: `${query.firstName} ${query.lastName}`,
-  age: query.age,
-}))
+import { useShallow } from 'jagdai'
+
+// ...
+
+const { name, age } = UserStore.useQuery(
+  useShallow((query) => ({
+    name: `${query.firstName} ${query.lastName}`,
+    age: query.age,
+  })),
+)
 ```
 
-`useQuery` 是否触发重渲染，是根据其第一个参数之前的返回值和下一次返回值之间做比较判断的
+只要 `query.firstName` 和 `query.lastName` 以及 `query.age` 其中一个改变就会触发组件重渲染
 
-默认情况下：
+`useQuery` 默认使用使用严格相等比较 `Object.is(old, new)` 来检测变化
 
-1. 如果这个返回值不是 `object` 类型，或者属于 `query` 字段，那么就会使用 `Object.is(old, new)` 做严格比较，如果不相等就触发重渲染
-2. 如果是 `object` 类型，且不属于 `query` 字段，就会将这个对象与旧值做一次浅比较，如果不相等就触发重渲染
+- `jagdai` 中提供了 `useShallow` 与 `useQuery` 组合使用，使用浅层比较的方式判断是否重渲染
 
-`useQuery` 第二个参数是个可选函数，你可以自定义比较函数覆盖这种默认情况
+- 对于更复杂的情况， `useQuery` 提供了第二个可选参数项，你可以自定义比较函数，覆盖这种默认情况
 
 ---
 

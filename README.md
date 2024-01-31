@@ -266,35 +266,50 @@ const onUpdateFail = useEvent((reason: string) => {
 
 ### Query multiple states at once
 
-Query multiple states and combine them into one value, and re-rendering will be triggered as long as either `query.salary` or `query.bonus` changes:
+#### Primitive types
 
 ```typescript
 const income = EmployeeStore.useQuery((query) => query.salary + query.bonus)
 ```
 
-Query multiple states and combine them into an array return, and re-rendering will be triggered as long as either `query.phone` or `query.email` changes:
+If either `query.salary` or `query.bonus` changes, it will trigger a re-render of the component.
+
+#### Shallow comparison
+
+When multiple states are combined into an object type returned, `jagdai` provides `useShallow` for determining updates through shallow comparison. The usage is as follows:
 
 ```typescript
-const [phone, email] = UserStore.useQuery((query) => [query.phone, query.email])
+import { useShallow } from 'jagdai'
+
+// ...
+
+const [phone, email] = UserStore.useQuery(
+  useShallow((query) => [query.phone, query.email]),
+)
 ```
 
-Query multiple states and combine them into an object return, and re-rendering will be triggered as long as either `query.firstName`, `query.lastName`, or `query.age` changes:
+If either `query.phone` or `query.email` changes, it will trigger a re-render of the component.
 
 ```typescript
-const { name, age } = UserStore.useQuery((query) => ({
-  name: `${query.firstName} ${query.lastName}`,
-  age: query.age,
-}))
+import { useShallow } from 'jagdai'
+
+// ...
+
+const { name, age } = UserStore.useQuery(
+  useShallow((query) => ({
+    name: `${query.firstName} ${query.lastName}`,
+    age: query.age,
+  })),
+)
 ```
 
-Whether `useQuery` triggers a re-render is determined by comparing the return value from its first function-type parameter between the previous and the next.
+If any of `query.firstName`, `query.lastName`, or `query.age changes`, it will trigger a re-render of the component.
 
-By default:
+By default, `useQuery` uses strict equality comparison `Object.is(old, new)` to detect changes.
 
-1. If the return value is not of the `object` type or belongs to the `query` field, it will use `Object.is(old, new)` for strict comparison. If they are not equal, a re-render will be triggered.
-2. If it is of the `object` type and does not belong to the `query` field, a `shallow` comparison will be performed between the object and the old value. If they are not equal, a re-render will be triggered.
+- In `jagdai`, `useShallow` is provided to be used in combination with `useQuery`, employing a shallow comparison approach to decide whether to re-render.
 
-The second argument of `useQuery` is an optional function that allows you to define a custom comparison function to override this default behavior.
+- For more complex situations, `useQuery` offers a second optional argument, allowing you to customize the comparison function to override this default behavior.
 
 ---
 

@@ -7,7 +7,7 @@ import type {
 } from './jagdai'
 import type { EventListener } from './useEventSubscription'
 
-import { createContext, useContext, memo } from 'react'
+import { createContext, useContext } from 'react'
 import { useEarliestEffect } from './useEarliestEffect'
 import { useCreation } from './useCreation'
 import { Store } from './store'
@@ -18,18 +18,8 @@ import { IsolatorProvider, IsolatorConsumer } from './isolator'
 
 type EmptyProps = {}
 
-type Options<Props> = {
-  /**
-   * Similar to React.memo
-   */
-  memo?:
-    | boolean
-    | ((prevProps: Readonly<Props>, nextProps: Readonly<Props>) => boolean)
-}
-
 export const create = <T extends StoreDefinition, P extends EmptyProps>(
   hook: (props: PropsWithChildren<P>) => ValidStoreOutput<T>,
-  options?: Options<P>,
 ) => {
   const StoreContext = createContext<Store<T> | undefined>(undefined)
 
@@ -62,7 +52,7 @@ export const create = <T extends StoreDefinition, P extends EmptyProps>(
     )
   }
 
-  const StoreProvider: FC<PropsWithChildren<P>> = (props) => {
+  const Provider: FC<PropsWithChildren<P>> = (props) => {
     return (
       <IsolatorProvider>
         <StoreExecutor {...props}>
@@ -72,16 +62,9 @@ export const create = <T extends StoreDefinition, P extends EmptyProps>(
     )
   }
 
-  const Provider = options?.memo
-    ? memo(
-        StoreProvider,
-        typeof options?.memo === 'function' ? options?.memo : undefined,
-      )
-    : StoreProvider
-
-  const useQuery = <QuerySlice,>(
-    selector: (query: QueryType<T>) => QuerySlice,
-    isEqual?: (prev: QuerySlice, next: QuerySlice) => boolean,
+  const useQuery = <Selected,>(
+    selector: (query: QueryType<T>) => Selected,
+    isEqual?: (prev: Selected, next: Selected) => boolean,
   ) => {
     return useQuerySelector(useStore(), selector, isEqual)
   }
