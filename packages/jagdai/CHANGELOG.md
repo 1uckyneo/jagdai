@@ -1,5 +1,11 @@
 # jagdai
 
+## 4.0.2
+
+### Patch Changes
+
+- rename JagdaiEvent as StoreEvent
+
 ## 4.0.1
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "jagdai-examples",
-  "version": "4.0.1",
+  "version": "4.0.2",
   "private": true,
   "scripts": {
     "dev": "vite --host",
@@ -12,7 +12,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "tslib": "^2.5.0",
-    "jagdai": "^4.0.1"
+    "jagdai": "^4.0.2"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^13.0.4",

@@ -1,5 +1,13 @@
 # jagdai-examples
 
+## 4.0.2
+
+### Patch Changes
+
+- rename JagdaiEvent as StoreEvent
+- Updated dependencies
+  - jagdai@4.0.2
+
 ## 4.0.1
 
 ### Patch Changes
