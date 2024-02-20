@@ -1,5 +1,11 @@
 # jagdai
 
+## 4.0.1
+
+### Patch Changes
+
+- Update docs and some var/type names
+
 ## 4.0.0
 
 ### Major Changes

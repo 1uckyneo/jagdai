@@ -1,5 +1,13 @@
 # jagdai-examples
 
+## 4.0.1
+
+### Patch Changes
+
+- Update docs and some var/type names
+- Updated dependencies
+  - jagdai@4.0.1
+
 ## 4.0.0
 
 ### Major Changes
