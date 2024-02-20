@@ -10,11 +10,11 @@ English | [中文] | [Қазақша🇰🇿]
 [![bundle size](https://img.shields.io/bundlephobia/minzip/jagdai.svg?label=bundle%20size&logo=javascript)](https://www.npmjs.com/package/jagdai)
 ![React](https://img.shields.io/npm/dependency-version/jagdai/peer/react?logo=react)
 
-> A React state and event management solution with almost no learning cost.
+> A React state and event management solution with almost no refactoring cost.
 
 ## What is Jagdai?
 
-Jagdai (pronounced `/ʒɑʁdɑj/`, it means "state" or "situation" in Kazakh) is a React state and event management solution with almost no learning cost.
+Jagdai (pronounced `/ʒɑʁdɑj/`, it means "state" or "situation" in Kazakh) is a React state and event management solution with almost no refactoring cost.
 
 - Almost no learning cost, easy to get started as long as you know how to use standard React Hook APIs.
 - Refactoring is easy for projects without using a state management library, in order to achieve excellent performance.

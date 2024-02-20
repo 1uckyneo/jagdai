@@ -10,16 +10,16 @@
 [![bundle size](https://img.shields.io/bundlephobia/minzip/jagdai.svg?label=bundle%20size&logo=javascript)](https://www.npmjs.com/package/jagdai)
 ![React](https://img.shields.io/npm/dependency-version/jagdai/peer/react?logo=react)
 
-> 一款几乎没有学习成本的 React 状态与事件管理方案
+> 一款几乎没有迁移成本的 React 状态与事件管理方案
 
 ## 什么是 Jagdai?
 
-Jagdai（发音 `/ʒɑʁdɑj/`，哈萨克语含义「状态」或「情况」）是一款几乎没有学习成本的 React 状态与事件管理方案。
+Jagdai（发音 `/ʒɑʁdɑj/`，哈萨克语含义「状态」或「情况」）是一款几乎没有迁移成本的 React 状态与事件管理方案。
 
 - 几乎没有学习成本，只要会使用标准 React Hook APIs 就能轻松上手
-- 易于未使用状态管理库开发的项目重构，以获得优秀的性能
+- 迁移成本低，对于尚未使用状态管理库的项目来说，该方案可以轻松重构，同时确保出色的性能
 - 简单、方便的跨组件事件管理方式
-- 优秀的 TypeScript 类型推导
+- 出色的 TypeScript 类型推导
 
 ## 在线体验
 
