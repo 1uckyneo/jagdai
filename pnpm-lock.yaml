@@ -91,7 +91,7 @@ importers:
       '@vanilla-extract/vite-plugin': ^3.8.0
       '@vitejs/plugin-react': ^3.0.1
       fast-glob: ^3.2.11
-      jagdai: ^4.0.0
+      jagdai: ^4.0.1
       react: ^18.2.0
       react-dom: ^18.2.0
       rimraf: ^3.0.2
