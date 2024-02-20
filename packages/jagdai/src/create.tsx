@@ -62,11 +62,11 @@ export const create = <T extends StoreDefinition, P extends EmptyProps>(
     )
   }
 
-  const useQuery = <Selected,>(
-    selector: (query: QueryType<T>) => Selected,
-    isEqual?: (prev: Selected, next: Selected) => boolean,
+  const useQuery = <Select,>(
+    selector: (query: QueryType<T>) => Select,
+    equalityFn?: (prev: Select, next: Select) => boolean,
   ) => {
-    return useQuerySelector(useStore(), selector, isEqual)
+    return useQuerySelector(useStore(), selector, equalityFn)
   }
 
   const useCommand = () => {

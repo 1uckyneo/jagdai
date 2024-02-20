@@ -5,28 +5,28 @@ import useSyncExternalStoreWithSelectorExport from 'use-sync-external-store/shim
 const { useSyncExternalStoreWithSelector } =
   useSyncExternalStoreWithSelectorExport
 
-const compare = <Selected>(
-  prev: Selected,
-  next: Selected,
-  isEqual?: (prev: Selected, next: Selected) => boolean,
+const compare = <Select>(
+  prev: Select,
+  next: Select,
+  equalityFn?: (prev: Select, next: Select) => boolean,
 ) => {
-  if (isEqual) {
-    return isEqual(prev, next)
+  if (equalityFn) {
+    return equalityFn(prev, next)
   }
 
   return Object.is(prev, next)
 }
 
-export const useQuerySelector = <T extends StoreDefinition, Selected>(
+export const useQuerySelector = <T extends StoreDefinition, Select>(
   store: Store<T>,
-  selector: (query: QueryType<T>) => Selected,
-  isEqual?: (prev: Selected, next: Selected) => boolean,
+  selector: (query: QueryType<T>) => Select,
+  equalityFn?: (prev: Select, next: Select) => boolean,
 ) => {
   return useSyncExternalStoreWithSelector(
     store.subscribeQuery,
     store.getQuery as () => QueryType<T>,
     store.getQuery as () => QueryType<T>,
     selector,
-    (prev, next) => compare(prev, next, isEqual),
+    (prev, next) => compare(prev, next, equalityFn),
   )
 }
