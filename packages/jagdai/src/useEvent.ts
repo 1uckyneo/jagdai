@@ -1,5 +1,5 @@
 import { useRef } from 'react'
-import type { JagdaiEvent, Listener } from './jagdai'
+import type { StoreEvent, Listener } from './jagdai'
 import { useEarliestEffect } from './useEarliestEffect'
 import { useCreation } from './useCreation'
 
@@ -28,7 +28,7 @@ export const useEvent = <Arg = void>(listener?: Listener<Arg>) => {
     listenerRef.current = listener
   })
 
-  return useCreation<JagdaiEvent<Arg>>(() => {
+  return useCreation<StoreEvent<Arg>>(() => {
     const event$ = new EventEmitter<Arg>()
 
     const dispatcher = (arg: Arg) => {

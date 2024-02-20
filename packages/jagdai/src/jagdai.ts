@@ -2,7 +2,7 @@ export type Listener<Arg> = (arg: Arg) => void
 
 type Subscriber<Arg> = (listener: Listener<Arg>) => () => void
 
-export type JagdaiEvent<Arg> = ((arg: Arg) => void) & {
+export type StoreEvent<Arg> = ((arg: Arg) => void) & {
   getEventSubscriber: () => Subscriber<Arg>
 }
 
@@ -14,7 +14,7 @@ type StoreOutput<Arg = any> = {
     [key: string]: (...args: any[]) => any
   }
   event: {
-    [key: string]: JagdaiEvent<Arg>
+    [key: string]: StoreEvent<Arg>
   }
 }
 
